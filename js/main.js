@@ -23,5 +23,5 @@ function weatherBalloon(cityID) {
 
 function traichu() {
 	dateTime();
-	weatherBalloon(1850147); //OpenWeather city ID
+	weatherBalloon(4569298); //OpenWeather city ID
 }
