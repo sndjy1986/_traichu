@@ -8,21 +8,16 @@
     <link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png">
     <script src="js/main.js"></script>
     <link rel="stylesheet" href="css/main.css">
-    <title>Joey's Homepage</title>
- <style>
+    <title>Joey's Homepage - Calendar</title>
+<style>
     body { 
         margin: 0;
-        padding-top: 50px; /* CORRECTED THIS LINE */
+        padding-top: 50px;
         transition: padding-top 0.3s ease;
     }
-    
-    /* This rule applies ONLY when a weather alert is active */
     body.alert-active {
-        /* Makes space for the 55px alert AND the 50px news ticker */
         padding-top: 105px; 
     }
-
-    /* WEATHER ALERT BANNER */
     #weather-alert {
         display: none;
         background-color: #d9534f;
@@ -32,18 +27,16 @@
         font-size: 18px;
         font-weight: bold;
         position: fixed;
-        top: 0; /* Pinned to the very top */
+        top: 0;
         width: 100%;
         z-index: 10000;
         border-bottom: 2px solid #a94442;
-        height: 55px; /* Set an explicit height */
-        box-sizing: border-box; /* Ensures padding is included in height */
+        height: 55px;
+        box-sizing: border-box;
     }
-
-    /* NEWS TICKER */
     #news-ticker {
         position: fixed;
-        top: 0; /* DEFAULT: Pinned to the top */
+        top: 0;
         left: 0;
         width: 100%;
         height: 50px;
@@ -54,12 +47,9 @@
         border-bottom: 2px solid #333;
         transition: top 0.3s ease;
     }
-    
-    /* This rule applies ONLY when a weather alert is active */
     body.alert-active #news-ticker {
-        top: 55px; /* Pushes the news ticker down below the alert banner */
+        top: 55px;
     }
-    
     #news-content {
         position: absolute;
         white-space: nowrap;
@@ -68,29 +58,21 @@
         font-size: 16px;
         font-weight: bold;
     }
-    
     @keyframes scroll {
         0% { transform: translateX(100%); }
         100% { transform: translateX(-100%); }
     }
-    
     #news-content a {
         color: #fff;
         text-decoration: none;
         margin-right: 80px;
     }
-    
     #news-content a:hover {
         text-decoration: underline;
     }
-    
-    /* MAIN CONTENT AREA - No longer needs special positioning */
-main {
-            position: relative !important;
-            top: 10px !important;
-            top: 10px !important;
+    main {
+        padding: 10px 20px;
     }
-    /* LIGHT/DARK MODE SUPPORT */
     :root {
         --text-color: #333;
         --link-color: #0066cc;
@@ -101,162 +83,56 @@ main {
             --link-color: #66b3ff;
         }
     }
-     .tab-buttons {
-    border-bottom: 2px solid #ccc;
-    margin-bottom: 10px;
-}
-
-.tab-link {
-    background-color: #f1f1f1;
-    border: 1px solid #ccc;
-    border-bottom: none;
-    border-radius: 5px 5px 0 0;
-    padding: 10px 20px;
-    cursor: pointer;
-    font-size: 16px;
-    margin-right: 5px;
-}
-
-.tab-link:hover {
-    background-color: #ddd;
-}
-
-.tab-link.active {
-    background-color: #fff;
-    border-bottom: 2px solid #fff; /* Makes it look connected */
-    margin-bottom: -2px; /* Lifts it up to cover the container's border */
-}
-
-.tab-content {
-    display: none;
-    padding: 15px;
-    border: 1px solid #ccc;
-    border-top: none;
-}
-
-.tab-content.active {
-    display: block;
-}
+    .tab-buttons {
+        border-bottom: 2px solid #ccc;
+        margin-bottom: 10px;
+        padding-bottom: 10px; /* Add padding to contain the floated button */
+        overflow: hidden; /* Also helps contain the float */
+    }
+    .tab-link {
+        background-color: #f1f1f1;
+        border: 1px solid #ccc;
+        border-bottom: none;
+        border-radius: 5px 5px 0 0;
+        padding: 10px 20px;
+        cursor: pointer;
+        font-size: 16px;
+        margin-right: 5px;
+        float: left; /* Align tabs to the left */
+    }
+    .tab-link:hover {
+        background-color: #ddd;
+    }
+    .tab-link.active {
+        background-color: #fff;
+        border-bottom: 2px solid #fff;
+        margin-bottom: -2px;
+    }
+    .tab-content {
+        display: none;
+        padding: 15px;
+        border: 1px solid #ccc;
+        border-top: none;
+        clear: both; /* Ensure content appears below the tabs */
+    }
+    .tab-content.active {
+        display: block;
+    }
+    /* Style for the new Home button */
+    .home-button {
+        float: right; /* Positions the button to the right */
+        background-color: #e7e7e7;
+        color: #333;
+        text-decoration: none;
+        border-radius: 5px;
+        padding: 10px 20px;
+        font-size: 16px;
+        border: 1px solid #ccc;
+        line-height: 1.5; /* Helps with vertical alignment */
+    }
+    .home-button:hover {
+        background-color: #ddd;
+    }
 </style>
 </head>
 <body>
-
-    <div id="weather-alert"></div>
-
-    <div id="news-ticker">
-        <div id="news-content">
-            🔴 Loading CNN headlines...
-        </div>
-    </div>
-
-    <main>
-    <br>
-    <br>
-    <header>
-        <section id="date-time">
-            <h2 class="sr-only">Date & Time</h2>
-        </section>
-        <section id="weather">
-            <h2 class="sr-only">Location & Weather</h2>
-        </section>
-    </header>
-
-    <section id="calendar-page-content" style="text-align: center; padding: 20px;">
-        <h1 style="color: var(--text-color);">My Calendar's</h1>
-        
-        <section id="calendar-page-content" style="padding: 20px;">
-    
-    <div class="tab-buttons">
-        <button class="tab-link active" data-tab="personal-calendar">Our Calendar</button>
-        <button class="tab-link" data-tab="work-calendar">Arianna's Calendar</button>
-        <button class="tab-link" data-tab="wendyandcorey">Wendy and Corey</button>
-    </div>
-
-    <div class="tab-content-wrapper">
-        <div id="personal-calendar" class="tab-content active">
-            <h3>Our Calendar</h3>
-            <iframe src="https://calendar.google.com/calendar/embed?src=sndjy1986%40gmail.com&ctz=America%2FNew_York" style="border:0" width="800" height="600" frameborder="0" scrolling="no"></iframe>
-        </div>
-
-        <div id="work-calendar" class="tab-content">
-            <h3>Arianna's Calendar</h3>
-            <p><iframe src="https://calendar.google.com/calendar/embed?src=463214c1bc4698718097fabc64aa7670b519e9250ee6e7992203339af222633d%40group.calendar.google.com&ctz=America%2FNew_York" style="border: 0" width="800" height="600" frameborder="0" scrolling="no"></iframe></p>
-        </div>
-        <div id="wendyandcorey" class="tab-content">
-            <h3>Wendy and Corey</h3>
-            <p><iframe src="https://calendar.google.com/calendar/embed?src=85f6604ee69e3a3eb2673d64c278a893529e0db366b47c96493ff933a36252e6%40group.calendar.google.com&ctz=America%2FNew_York" style="border: 0" width="800" height="600" frameborder="0" scrolling="no"></iframe></p>
-        </div>
-    </div>
-
-</section>
-</main>
-    
-    <script>
-        // Load CNN headlines
-        setTimeout(() => {
-            const newsContent = document.getElementById('news-content');
-            
-            fetch('https://api.rss2json.com/v1/api.json?rss_url=http://rss.cnn.com/rss/edition.rss&api_key=tm0pr51ylq8lobpcshhokmymr4luqpbeefhox7wv&count=8')
-            .then(response => response.json())
-            .then(data => {
-                if (data.status === 'ok' && data.items) {
-                    let html = '';
-                    data.items.forEach(item => {
-                        const cleanTitle = item.title.replace(/<[^>]*>/g, '');
-                        html += `<a href="${item.link}" target="_blank">🔴 ${cleanTitle}</a>`;
-                    });
-                    newsContent.innerHTML = html;
-                    console.log('CNN headlines loaded successfully!');
-                } else {
-                    throw new Error('RSS failed');
-                }
-            })
-            .catch(error => {
-                // Fallback headlines
-                newsContent.innerHTML = '🔴 CNN Breaking News 🔴 Weather Alert: Winter Storm Watch 🔴 Markets: Tech Stocks Rally 🔴 Politics: Congressional Hearing Today 🔴 Health: CDC Updates Guidelines';
-                console.log('Using fallback headlines');
-            });
-        }, 2000);
-        
-        // Refresh every 15 minutes
-        setInterval(() => {
-            const newsContent = document.getElementById('news-content');
-            fetch('https://api.rss2json.com/v1/api.json?rss_url=http://rss.cnn.com/rss/edition.rss&api_key=tm0pr51ylq8lobpcshhokmymr4luqpbeefhox7wv&count=8')
-            .then(response => response.json())
-            .then(data => {
-                if (data.status === 'ok' && data.items) {
-                    let html = '';
-                    data.items.forEach(item => {
-                        const cleanTitle = item.title.replace(/<[^>]*>/g, '');
-                        html += `<a href="${item.link}" target="_blank">🔴 ${cleanTitle}</a>`;
-                    });
-                    newsContent.innerHTML = html;
-                }
-            })
-            .catch(error => console.log('Refresh failed, keeping current headlines'));
-        }, 900000);
-    </script>
-    <script>
-    // Logic for the calendar tabs
-    const tabButtonsContainer = document.querySelector('.tab-buttons');
-
-    tabButtonsContainer.addEventListener('click', (e) => {
-        if (e.target.classList.contains('tab-link')) {
-            const tabId = e.target.getAttribute('data-tab');
-
-            // Update the tab buttons
-            document.querySelectorAll('.tab-link').forEach(button => {
-                button.classList.remove('active');
-            });
-            e.target.classList.add('active');
-
-            // Update the tab content
-            document.querySelectorAll('.tab-content').forEach(content => {
-                content.classList.remove('active');
-            });
-            document.getElementById(tabId).classList.add('active');
-        }
-    });
-</script>
-</body>
-</html>
