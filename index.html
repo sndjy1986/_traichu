@@ -9,94 +9,98 @@
     <script src="js/main.js"></script>
     <link rel="stylesheet" href="css/main.css">
     <title>Joey's Homepage</title>
-    <style>
-        body { 
-            margin: 0; 
-            padding: 0; 
-            transition: padding-top 0.3s ease; /* Smooth transition for alert */
-        }
-        
-        /* WEATHER ALERT BANNER */
-        #weather-alert {
-            display: none; /* Hidden by default */
-            background-color: #d9534f; /* Red warning color */
-            color: white;
-            padding: 15px;
-            text-align: center;
-            font-size: 18px;
-            font-weight: bold;
-            position: fixed;
-            top: 0;
-            width: 100%;
-            z-index: 10000;
-            border-bottom: 2px solid #a94442;
-        }
+   <style>
+    body { 
+        margin: 0; 
+        padding-top: 50px; /* DEFAULT: Makes space for the 50px news ticker */
+        transition: padding-top 0.3s ease;
+    }
+    
+    /* This rule applies ONLY when a weather alert is active */
+    body.alert-active {
+        /* Makes space for the 55px alert AND the 50px news ticker */
+        padding-top: 105px; 
+    }
 
-        /* Pushes content down when alert is active */
-        body.alert-active #news-ticker {
-            top: 55px; /* Pushes the news ticker down */
-        }
-        body.alert-active main {
-            margin-top: 55px; /* Adds space above main content */
-        }
+    /* WEATHER ALERT BANNER */
+    #weather-alert {
+        display: none;
+        background-color: #d9534f;
+        color: white;
+        padding: 15px;
+        text-align: center;
+        font-size: 18px;
+        font-weight: bold;
+        position: fixed;
+        top: 0; /* Pinned to the very top */
+        width: 100%;
+        z-index: 10000;
+        border-bottom: 2px solid #a94442;
+        height: 55px; /* Set an explicit height */
+        box-sizing: border-box; /* Ensures padding is included in height */
+    }
 
-        /* NEWS TICKER AT TOP */
-        #news-ticker {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 50px;
-            background: #000;
-            color: #fff;
-            overflow: hidden;
-            z-index: 9999;
-            border-bottom: 2px solid #333;
-            transition: top 0.3s ease; /* Smooth transition */
-        }
-        
-        #news-content {
-            position: absolute;
-            white-space: nowrap;
-            animation: scroll 90s linear infinite;
-            line-height: 50px;
-            font-size: 16px;
-            font-weight: bold;
-        }
-        
-        @keyframes scroll {
-            0% { transform: translateX(100%); }
-            100% { transform: translateX(-100%); }
-        }
-        
-        #news-content a {
-            color: #fff;
-            text-decoration: none;
-            margin-right: 80px;
-        }
-        
-        #news-content a:hover {
-            text-decoration: underline;
-        }
-        
-        /* PUSH MAIN CONTENT DOWN */
-        main {
-            position: relative;
-            padding-top: 50px; /* Make space for the fixed news ticker */
-        }
-        
-        /* LIGHT/DARK MODE SUPPORT */
+    /* NEWS TICKER */
+    #news-ticker {
+        position: fixed;
+        top: 0; /* DEFAULT: Pinned to the top */
+        left: 0;
+        width: 100%;
+        height: 50px;
+        background: #000;
+        color: #fff;
+        overflow: hidden;
+        z-index: 9999;
+        border-bottom: 2px solid #333;
+        transition: top 0.3s ease;
+    }
+    
+    /* This rule applies ONLY when a weather alert is active */
+    body.alert-active #news-ticker {
+        top: 55px; /* Pushes the news ticker down below the alert banner */
+    }
+    
+    #news-content {
+        position: absolute;
+        white-space: nowrap;
+        animation: scroll 90s linear infinite;
+        line-height: 50px;
+        font-size: 16px;
+        font-weight: bold;
+    }
+    
+    @keyframes scroll {
+        0% { transform: translateX(100%); }
+        100% { transform: translateX(-100%); }
+    }
+    
+    #news-content a {
+        color: #fff;
+        text-decoration: none;
+        margin-right: 80px;
+    }
+    
+    #news-content a:hover {
+        text-decoration: underline;
+    }
+    
+    /* MAIN CONTENT AREA - No longer needs special positioning */
+    main {
+        padding: 10px 20px; /* Add some general padding for looks */
+    }
+    
+    /* LIGHT/DARK MODE SUPPORT */
+    :root {
+        --text-color: #333;
+        --link-color: #0066cc;
+    }
+    @media (prefers-color-scheme: dark) {
         :root {
-            --text-color: #333;
-            --link-color: #0066cc;
+            --text-color: #ffffff;
+            --link-color: #66b3ff;
         }
-        @media (prefers-color-scheme: dark) {
-            :root {
-                --text-color: #ffffff;
-                --link-color: #66b3ff;
-            }
-        }
-    </style>
+    }
+</style>
 </head>
 <body>
 
