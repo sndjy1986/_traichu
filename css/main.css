@@ -11,3 +11,35 @@
 #date-time, #weather {
     font-size: 1.2em;
 }
+<style>
+    body { margin: 0; padding: 0; }
+
+    /* WEATHER ALERT BANNER */
+    #weather-alert {
+        display: none; /* Hidden by default */
+        background-color: #d9534f; /* Red warning color */
+        color: white;
+        padding: 15px;
+        text-align: center;
+        font-size: 18px;
+        font-weight: bold;
+        position: fixed;
+        top: 0;
+        width: 100%;
+        z-index: 10000;
+        border-bottom: 2px solid #a94442;
+    }
+
+    #weather-alert a {
+        color: white;
+        text-decoration: underline;
+    }
+
+    /* PUSHES CONTENT DOWN WHEN ALERT IS ACTIVE */
+    body.alert-active {
+        padding-top: 55px; /* Adjust this value based on alert height */
+    }
+    
+    /* NEWS TICKER AT TOP */
+    #news-ticker {
+    ...
