@@ -1,8 +1,4 @@
-<main>
-        <!-- Top CNN RSS News Feed -->
-        <section id="top-news-feed" style="background: var(--news-bg, #1a1a1a); color: var(--news-text, #ffffff); padding: 8px 0; border-bottom: 1px solid var(--news-border, #333); margin-bottom: 20px;">
-            <div style="overflow: hidden; height: 30px; position: relative;">
-                <div id="top-news-ticker" style="position: absolute; white-space: nowrap; animation: scroll-right 90s linear infinite; line-height: 30px; font-size: 14px; font<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -13,6 +9,30 @@
     <script src="js/main.js"></script>
     <link rel="stylesheet" href="css/main.css">
     <title>_traichu</title>
+    <style>
+        :root {
+            --text-color: #333;
+            --link-color: #0066cc;
+        }
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --text-color: #ffffff;
+                --link-color: #66b3ff;
+            }
+        }
+        @keyframes scroll-left {
+            0% { transform: translateX(100%); }
+            100% { transform: translateX(-100%); }
+        }
+        #top-news-ticker a {
+            color: var(--link-color);
+            text-decoration: none;
+            margin-right: 60px;
+        }
+        #top-news-ticker a:hover {
+            text-decoration: underline;
+        }
+    </style>
 </head>
 <body onload="traichu()">
     <main>
@@ -22,63 +42,17 @@
             </section>
             <section id="top-news-ticker" style="text-align: center; font-size: 14px; overflow: hidden; height: 25px; position: relative;">
                 <div style="position: absolute; white-space: nowrap; animation: scroll-left 80s linear infinite; line-height: 25px; color: var(--text-color, #333);">
-                    Loading CNN news...
+                    <a href="https://www.cnn.com" target="_blank">CNN Breaking News</a>
+                    <a href="https://www.bbc.com/news" target="_blank">BBC World News</a>
+                    <a href="https://apnews.com" target="_blank">AP Top Stories</a>
+                    <a href="https://www.reuters.com" target="_blank">Reuters Latest</a>
+                    <a href="https://news.google.com" target="_blank">Google News</a>
                 </div>
             </section>
             <section id="weather">
                 <h2 class="sr-only">Location &amp; Weather</h2>
             </section>
         </header>
-        <style>
-            :root {
-                --text-color: #333;
-                --link-color: #0066cc;
-            }
-            @media (prefers-color-scheme: dark) {
-                :root {
-                    --text-color: #ffffff;
-                    --link-color: #66b3ff;
-                }
-            }
-            @keyframes scroll-left {
-                0% { transform: translateX(100%); }
-                100% { transform: translateX(-100%); }
-            }
-            #top-news-ticker a {
-                color: var(--link-color);
-                text-decoration: none;
-                margin-right: 60px;
-            }
-            #top-news-ticker a:hover {
-                text-decoration: underline;
-            }
-        </style>
-        <script>
-            // Load CNN RSS Feed
-            async function loadTopNews() {
-                try {
-                    const response = await fetch('https://api.rss2json.com/v1/api.json?rss_url=http://rss.cnn.com/rss/edition.rss&count=8');
-                    const data = await response.json();
-                    
-                    if (data.status === 'ok') {
-                        const ticker = document.querySelector('#top-news-ticker div');
-                        let newsHTML = '';
-                        data.items.forEach(item => {
-                            newsHTML += `<a href="${item.link}" target="_blank">${item.title}</a>`;
-                        });
-                        ticker.innerHTML = newsHTML;
-                    }
-                } catch (error) {
-                    const ticker = document.querySelector('#top-news-ticker div');
-                    ticker.innerHTML = '<a href="https://www.cnn.com" target="_blank">CNN Breaking News</a><a href="https://www.bbc.com/news" target="_blank">BBC World News</a><a href="https://apnews.com" target="_blank">AP Top Stories</a>';
-                }
-            }
-            
-            // Load news when page loads
-            document.addEventListener('DOMContentLoaded', loadTopNews);
-            // Refresh every 10 minutes
-            setInterval(loadTopNews, 600000);
-        </script>
         <section id="traichu">
             <h1 class="sr-only">Joey's Homepage</h1>
             <aside>
