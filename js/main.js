@@ -27,46 +27,22 @@ function traichu() {
 	dateTime();
 	weatherBalloon(4569298); //OpenWeather city ID
 }
-// Add this new code at the end of your <script> block
-
+// TEMPORARY TEST FUNCTION
 function fetchWeatherAlert() {
     const alertContainer = document.getElementById('weather-alert');
-    const forecastZone = 'SCZ106'; // NWS Zone for Anderson County, SC
-    const apiUrl = `https://api.weather.gov/alerts/active/zone/${forecastZone}`;
-
-    fetch(apiUrl)
-        .then(response => response.json())
-        .then(data => {
-            if (data.features && data.features.length > 0) {
-                // Alert is active
-                const alert = data.features[0].properties;
-                const headline = alert.headline;
-                const description = alert.description;
-                
-                // You can link to the full alert for more details
-                const alertUrl = alert.id; 
-
-                alertContainer.innerHTML = `🚨 ${headline}`;
-                alertContainer.style.display = 'block';
-                document.body.classList.add('alert-active');
-                console.log(`Weather Alert: ${headline}`);
-            } else {
-                // No active alerts
-                alertContainer.style.display = 'none';
-                document.body.classList.remove('alert-active');
-                console.log('No active weather alerts for your zone.');
-            }
-        })
-        .catch(error => {
-            console.error('Error fetching weather alert:', error);
-            // Hide alert banner on error to avoid confusion
-            alertContainer.style.display = 'none';
-            document.body.classList.remove('alert-active');
-        });
+    
+    // --- We are creating a fake alert for testing ---
+    const fakeHeadline = "TORNADO WARNING for this area until 2:30 PM EDT.";
+    
+    // --- This part displays the fake alert ---
+    alertContainer.innerHTML = `🚨 ${fakeHeadline}`;
+    alertContainer.style.display = 'block';
+    document.body.classList.add('alert-active');
+    console.log("TESTING: Displaying a fake weather alert.");
 }
 
 // Initial check when page loads
 fetchWeatherAlert();
 
-// Re-check for alerts every 10 minutes (600,000 milliseconds)
-setInterval(fetchWeatherAlert, 600000);
+// You can comment out the setInterval for testing if you want
+// setInterval(fetchWeatherAlert, 600000);
