@@ -10,10 +10,36 @@
     <link rel="stylesheet" href="css/main.css">
     <title>Joey's Homepage</title>
     <style>
-        body { margin: 0; padding: 0; }
-        <body onload="traichu()">
-    <div id="weather-alert"></div>
-    <div id="news-ticker">
+        body { 
+            margin: 0; 
+            padding: 0; 
+            transition: padding-top 0.3s ease; /* Smooth transition for alert */
+        }
+        
+        /* WEATHER ALERT BANNER */
+        #weather-alert {
+            display: none; /* Hidden by default */
+            background-color: #d9534f; /* Red warning color */
+            color: white;
+            padding: 15px;
+            text-align: center;
+            font-size: 18px;
+            font-weight: bold;
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 10000;
+            border-bottom: 2px solid #a94442;
+        }
+
+        /* Pushes content down when alert is active */
+        body.alert-active #news-ticker {
+            top: 55px; /* Pushes the news ticker down */
+        }
+        body.alert-active main {
+            margin-top: 55px; /* Adds space above main content */
+        }
+
         /* NEWS TICKER AT TOP */
         #news-ticker {
             position: fixed;
@@ -26,6 +52,7 @@
             overflow: hidden;
             z-index: 9999;
             border-bottom: 2px solid #333;
+            transition: top 0.3s ease; /* Smooth transition */
         }
         
         #news-content {
@@ -52,11 +79,10 @@
             text-decoration: underline;
         }
         
-        
-        /* PUSH MAIN CONTENT DOWN - REVISED FIX */
+        /* PUSH MAIN CONTENT DOWN */
         main {
-            position: relative !important;
-            top: 10px !important;
+            position: relative;
+            padding-top: 50px; /* Make space for the fixed news ticker */
         }
         
         /* LIGHT/DARK MODE SUPPORT */
@@ -72,14 +98,16 @@
         }
     </style>
 </head>
-<body onload="traichu()">
+<body>
+
+    <div id="weather-alert"></div>
+
     <div id="news-ticker">
         <div id="news-content">
             🔴 Loading CNN headlines...
         </div>
     </div>
-    <br>
-    <br>
+
     <main>
         <br>
         <br>
