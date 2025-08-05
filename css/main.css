@@ -11,23 +11,3 @@
 #date-time, #weather {
     font-size: 1.2em;
 }
-@keyframes scroll-left {
-    0% { transform: translateX(100%); }
-    100% { transform: translateX(-100%); }
-}
-
-#news-ticker {
-    line-height: 50px;
-    font-size: 14px;
-    color: #333;
-}
-
-#news-ticker a {
-    color: #0066cc;
-    text-decoration: none;
-    margin-right: 50px;
-}
-
-#news-ticker a:hover {
-    text-decoration: underline;
-}
