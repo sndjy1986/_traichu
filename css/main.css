@@ -8,3 +8,6 @@
 @import url('animations.css');
 /* Main Styles */
 @import url('styles.css');
+#date-time, #weather {
+    font-size: 1.2em;
+}
