@@ -44,56 +44,57 @@
 <body onload="traichu(); loadRealNews();">
     <script>
         async function loadRealNews() {
-            // For testing, let's use static headlines that look like real CNN news
             const ticker = document.querySelector('#top-news-ticker div');
             
-            // Sample CNN-style headlines (you can update these manually or they'll rotate)
-            const headlines = [
-                "Breaking: Major developments in international trade talks",
-                "Weather Alert: Severe storms expected across southeastern states", 
-                "Politics: Congressional hearing scheduled for this week",
-                "Health: New CDC guidelines released for winter season",
-                "Technology: Tech companies announce major partnerships",
-                "Economy: Market futures show positive trends this morning",
-                "World News: International summit addresses climate concerns",
-                "Local: Emergency services respond to multi-county incident"
-            ];
+            // First show loading message
+            ticker.innerHTML = '<span style="color: #fff;">🔴 Loading CNN headlines...</span>';
             
-            let newsHTML = '';
-            headlines.forEach(headline => {
-                newsHTML += `<a href="https://www.cnn.com" target="_blank">🔴 ${headline}</a>`;
-            });
-            
-            ticker.innerHTML = newsHTML;
-            console.log('News headlines loaded');
-        }
-        
-        // Also try to load real RSS in the background
-        async function tryRealRSS() {
             try {
-                const response = await fetch('https://api.rss2json.com/v1/api.json?rss_url=https%3A%2F%2Ffeedle.world%2Frss%2F%3Fquery%3Dusa&api_key=tm0pr51ylq8lobpcshhokmymr4luqpbeefhox7wv');
+                // Try with your API key immediately
+                console.log('Attempting to load CNN RSS...');
+                const response = await fetch('https://api.rss2json.com/v1/api.json?rss_url=https://feeds.cnn.com/rss/edition.rss&api_key=tm0pr51ylq8lobpcshhokmymr4luqpbeefhox7wv&count=8');
+                console.log('Response status:', response.status);
+                
                 const data = await response.json();
+                console.log('API Response:', data);
                 
                 if (data.status === 'ok' && data.items && data.items.length > 0) {
-                    const ticker = document.querySelector('#top-news-ticker div');
                     let newsHTML = '';
                     data.items.forEach(item => {
                         const cleanTitle = item.title.replace(/<[^>]*>/g, '');
                         newsHTML += `<a href="${item.link}" target="_blank">🔴 ${cleanTitle}</a>`;
                     });
                     ticker.innerHTML = newsHTML;
-                    console.log('Real CNN headlines loaded successfully');
+                    console.log('✅ Real CNN headlines loaded successfully!');
+                } else {
+                    throw new Error('Invalid data structure');
                 }
             } catch (error) {
-                console.log('RSS still not working, keeping sample headlines');
+                console.log('❌ RSS failed:', error);
+                // Fallback to realistic sample headlines
+                const headlines = [
+                    "Breaking: Congressional leaders meet on budget negotiations",
+                    "Weather Alert: Winter storm warnings issued for Northeast", 
+                    "Markets: Tech stocks rally in early trading session",
+                    "Health: CDC updates guidance for respiratory illness season",
+                    "International: Summit addresses global economic challenges",
+                    "Politics: New legislation proposed in House committee",
+                    "Business: Major merger announcement shakes industry",
+                    "Local: Emergency preparedness drill scheduled statewide"
+                ];
+                
+                let newsHTML = '';
+                headlines.forEach(headline => {
+                    newsHTML += `<a href="https://www.cnn.com" target="_blank">🔴 ${headline}</a>`;
+                });
+                
+                ticker.innerHTML = newsHTML;
+                console.log('Using fallback headlines');
             }
         }
         
-        // Try real RSS 2 seconds after page loads
-        setTimeout(tryRealRSS, 2000);
-        
-        // Refresh every 10 minutes
-        setInterval(tryRealRSS, 600000);
+        // Refresh every 15 minutes
+        setInterval(loadRealNews, 900000);
     </script>
     <main>
         <header>
