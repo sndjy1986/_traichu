@@ -246,7 +246,7 @@ main {
             })
             .catch(error => {
                 // Fallback headlines
-                newsContent.innerHTML = '🔴 CNN Breaking News 🔴 Weather Alert: Winter Storm Watch 🔴 Markets: Tech Stocks Rally 🔴 Politics: Congressional Hearing Today 🔴 Health: CDC Updates Guidelines';
+                newsContent.innerHTML = '🔴Breaking News 🔴 Weather Alert: Winter Storm Watch 🔴 Markets: Tech Stocks Rally 🔴 Politics: Congressional Hearing Today 🔴 Health: CDC Updates Guidelines';
                 console.log('Using fallback headlines');
             });
         }, 2000);
@@ -254,7 +254,7 @@ main {
         // Refresh every 15 minutes
         setInterval(() => {
             const newsContent = document.getElementById('news-content');
-            fetch('https://api.rss2json.com/v1/api.json?rss_url=http://rss.cnn.com/rss/edition.rss&api_key=tm0pr51ylq8lobpcshhokmymr4luqpbeefhox7wv&count=8')
+            fetch('https://api.rss2json.com/v1/api.json?rss_url=https%3A%2F%2Fwww.cbsnews.com%2Flatest%2Frss%2Fus&api_key=tm0pr51ylq8lobpcshhokmymr4luqpbeefhox7wv')
             .then(response => response.json())
             .then(data => {
                 if (data.status === 'ok' && data.items) {
