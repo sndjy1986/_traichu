@@ -71,7 +71,7 @@
         // Also try to load real RSS in the background
         async function tryRealRSS() {
             try {
-                const response = await fetch('https://api.rss2json.com/v1/api.json?rss_url=https://feeds.cnn.com/rss/edition.rss&api_key=tm0pr51ylq8lobpcshhokmymr4luqpbeefhox7wv&count=8');
+                const response = await fetch('https://api.rss2json.com/v1/api.json?rss_url=https%3A%2F%2Ffeedle.world%2Frss%2F%3Fquery%3Dusa&api_key=tm0pr51ylq8lobpcshhokmymr4luqpbeefhox7wv');
                 const data = await response.json();
                 
                 if (data.status === 'ok' && data.items && data.items.length > 0) {
