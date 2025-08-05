@@ -231,5 +231,27 @@ main {
             .catch(error => console.log('Refresh failed, keeping current headlines'));
         }, 900000);
     </script>
+    <script>
+    // Logic for the calendar tabs
+    const tabButtonsContainer = document.querySelector('.tab-buttons');
+
+    tabButtonsContainer.addEventListener('click', (e) => {
+        if (e.target.classList.contains('tab-link')) {
+            const tabId = e.target.getAttribute('data-tab');
+
+            // Update the tab buttons
+            document.querySelectorAll('.tab-link').forEach(button => {
+                button.classList.remove('active');
+            });
+            e.target.classList.add('active');
+
+            // Update the tab content
+            document.querySelectorAll('.tab-content').forEach(content => {
+                content.classList.remove('active');
+            });
+            document.getElementById(tabId).classList.add('active');
+        }
+    });
+</script>
 </body>
 </html>
