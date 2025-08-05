@@ -34,18 +34,35 @@ function weatherBalloon(cityID) {
 }
 
 /**
- * 3. DISPLAYS A TEST ALERT (TESTING ONLY)
- * This function forces the weather alert banner to appear.
+ * 3. FETCHES AND DISPLAYS LIVE NWS WEATHER ALERTS
+ * This function connects to the NWS API for real-time alerts.
  */
 function fetchWeatherAlert() {
     const alertContainer = document.getElementById('weather-alert');
-    if (alertContainer) {
-        const fakeHeadline = "TORNADO WARNING for this area until 2:30 PM EDT.";
-        alertContainer.innerHTML = `🚨 ${fakeHeadline}`;
-        alertContainer.style.display = 'block';
-        document.body.classList.add('alert-active');
-        console.log("TESTING: Displaying a fake weather alert.");
-    }
+    const forecastZone = 'SCZ106'; // NWS Zone for Anderson County, SC
+    const apiUrl = `https://api.weather.gov/alerts/active/zone/${forecastZone}`;
+
+    fetch(apiUrl)
+        .then(response => response.json())
+        .then(data => {
+            if (data.features && data.features.length > 0) {
+                // If an alert is active, display it
+                const alert = data.features[0].properties;
+                alertContainer.innerHTML = `🚨 ${alert.headline}`;
+                alertContainer.style.display = 'block';
+                document.body.classList.add('alert-active');
+            } else {
+                // If no alerts, make sure the banner is hidden
+                alertContainer.style.display = 'none';
+                document.body.classList.remove('alert-active');
+            }
+        })
+        .catch(error => {
+            console.error('Error fetching NWS weather alert:', error);
+            // Also hide the banner if the API call fails
+            alertContainer.style.display = 'none';
+            document.body.classList.remove('alert-active');
+        });
 }
 
 /**
@@ -55,7 +72,12 @@ function fetchWeatherAlert() {
 function initializeApp() {
     dateTime();
     weatherBalloon(4569298); // Anderson, SC city ID
-    fetchWeatherAlert(); // This will show the test alert
+    
+    // Check for a weather alert immediately on load
+    fetchWeatherAlert();
+    
+    // Set the alert to re-check every 10 minutes (600,000 milliseconds)
+    setInterval(fetchWeatherAlert, 600000); 
 }
 
 // This line waits for the HTML to be fully loaded, then runs the app.
