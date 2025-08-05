@@ -1,46 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    /* STYLES FOR CALENDAR TABS */
-.tab-buttons {
-    border-bottom: 2px solid #ccc;
-    margin-bottom: 10px;
-}
-
-.tab-link {
-    background-color: #f1f1f1;
-    border: 1px solid #ccc;
-    border-bottom: none;
-    border-radius: 5px 5px 0 0;
-    padding: 10px 20px;
-    cursor: pointer;
-    font-size: 16px;
-    margin-right: 5px;
-}
-
-.tab-link:hover {
-    background-color: #ddd;
-}
-
-/* Style for the active/selected tab */
-.tab-link.active {
-    background-color: #fff;
-    border-bottom: 2px solid #fff; /* Makes it look connected */
-    margin-bottom: -2px; /* Lifts it up to cover the container's border */
-}
-
-/* Hide all tab content by default */
-.tab-content {
-    display: none;
-    padding: 15px;
-    border: 1px solid #ccc;
-    border-top: none;
-}
-
-/* Show only the active tab's content */
-.tab-content.active {
-    display: block;
-}
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -141,6 +101,42 @@ main {
             --link-color: #66b3ff;
         }
     }
+     .tab-buttons {
+    border-bottom: 2px solid #ccc;
+    margin-bottom: 10px;
+}
+
+.tab-link {
+    background-color: #f1f1f1;
+    border: 1px solid #ccc;
+    border-bottom: none;
+    border-radius: 5px 5px 0 0;
+    padding: 10px 20px;
+    cursor: pointer;
+    font-size: 16px;
+    margin-right: 5px;
+}
+
+.tab-link:hover {
+    background-color: #ddd;
+}
+
+.tab-link.active {
+    background-color: #fff;
+    border-bottom: 2px solid #fff; /* Makes it look connected */
+    margin-bottom: -2px; /* Lifts it up to cover the container's border */
+}
+
+.tab-content {
+    display: none;
+    padding: 15px;
+    border: 1px solid #ccc;
+    border-top: none;
+}
+
+.tab-content.active {
+    display: block;
+}
 </style>
 </head>
 <body>
