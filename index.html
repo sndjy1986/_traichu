@@ -62,7 +62,7 @@
                     data.items.forEach(item => {
                         // Clean up the title (remove HTML tags if any)
                         const cleanTitle = item.title.replace(/<[^>]*>/g, '');
-                        newsHTML += `<a href="${item.link}" target="_blank">${cleanTitle}</a>`;
+                        newsHTML += `<a href="${item.link}" target="_blank">🔴 ${cleanTitle}</a>`;
                     });
                     ticker.innerHTML = newsHTML;
                     console.log('CNN headlines loaded successfully');
@@ -74,11 +74,11 @@
                 // Fallback to static links if RSS fails
                 const ticker = document.querySelector('#top-news-ticker div');
                 ticker.innerHTML = `
-                    <a href="https://www.cnn.com" target="_blank">CNN Breaking News</a>
-                    <a href="https://www.bbc.com/news" target="_blank">BBC World News</a>
-                    <a href="https://apnews.com" target="_blank">AP Top Stories</a>
-                    <a href="https://www.reuters.com" target="_blank">Reuters Latest</a>
-                    <a href="https://news.google.com" target="_blank">Google News</a>
+                    <a href="https://www.cnn.com" target="_blank">🔴 CNN Breaking News</a>
+                    <a href="https://www.bbc.com/news" target="_blank">🔴 BBC World News</a>
+                    <a href="https://apnews.com" target="_blank">🔴 AP Top Stories</a>
+                    <a href="https://www.reuters.com" target="_blank">🔴 Reuters Latest</a>
+                    <a href="https://news.google.com" target="_blank">🔴 Google News</a>
                 `;
             }
         }
