@@ -13,11 +13,17 @@
         :root {
             --text-color: #333;
             --link-color: #0066cc;
+            --news-bg: #000;
+            --news-text: #fff;
+            --border-color: #333;
         }
         @media (prefers-color-scheme: dark) {
             :root {
                 --text-color: #ffffff;
                 --link-color: #66b3ff;
+                --news-bg: #1a1a1a;
+                --news-text: #ffffff;
+                --border-color: #444;
             }
         }
         @keyframes scroll-left {
@@ -25,9 +31,10 @@
             100% { transform: translateX(-100%); }
         }
         #top-news-ticker a {
-            color: var(--link-color);
+            color: var(--news-text);
             text-decoration: none;
-            margin-right: 60px;
+            margin-right: 80px;
+            font-weight: 500;
         }
         #top-news-ticker a:hover {
             text-decoration: underline;
