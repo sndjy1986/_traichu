@@ -44,10 +44,17 @@
 <body onload="traichu(); loadRealNews();">
     <script>
         async function loadRealNews() {
+            // Wait for DOM to be ready and find the ticker
             const ticker = document.querySelector('#top-news-ticker div');
+            
+            if (!ticker) {
+                console.log('❌ Could not find ticker element');
+                return;
+            }
             
             // First show loading message
             ticker.innerHTML = '<span style="color: #fff;">🔴 Loading CNN headlines...</span>';
+            console.log('Ticker element found, loading headlines...');
             
             try {
                 // Try with your API key immediately
@@ -62,10 +69,10 @@
                     let newsHTML = '';
                     data.items.forEach(item => {
                         const cleanTitle = item.title.replace(/<[^>]*>/g, '');
-                        newsHTML += `<a href="${item.link}" target="_blank">🔴 ${cleanTitle}</a>`;
+                        newsHTML += `<a href="${item.link}" target="_blank" style="color: #fff; text-decoration: none; margin-right: 80px;">🔴 ${cleanTitle}</a>`;
                     });
                     ticker.innerHTML = newsHTML;
-                    console.log('✅ Real CNN headlines loaded successfully!');
+                    console.log('✅ Real CNN headlines loaded successfully! HTML length:', newsHTML.length);
                 } else {
                     throw new Error('Invalid data structure');
                 }
@@ -77,20 +84,24 @@
                     "Weather Alert: Winter storm warnings issued for Northeast", 
                     "Markets: Tech stocks rally in early trading session",
                     "Health: CDC updates guidance for respiratory illness season",
-                    "International: Summit addresses global economic challenges",
-                    "Politics: New legislation proposed in House committee",
-                    "Business: Major merger announcement shakes industry",
-                    "Local: Emergency preparedness drill scheduled statewide"
+                    "International: Summit addresses global economic challenges"
                 ];
                 
                 let newsHTML = '';
                 headlines.forEach(headline => {
-                    newsHTML += `<a href="https://www.cnn.com" target="_blank">🔴 ${headline}</a>`;
+                    newsHTML += `<a href="https://www.cnn.com" target="_blank" style="color: #fff; text-decoration: none; margin-right: 80px;">🔴 ${headline}</a>`;
                 });
                 
                 ticker.innerHTML = newsHTML;
                 console.log('Using fallback headlines');
             }
+        }
+        
+        // Make sure DOM is loaded before running
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', loadRealNews);
+        } else {
+            loadRealNews();
         }
         
         // Refresh every 15 minutes
