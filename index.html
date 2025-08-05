@@ -34,7 +34,51 @@
         }
     </style>
 </head>
-<body onload="traichu()">
+<body onload="traichu(); loadRealNews();">
+    <script>
+        async function loadRealNews() {
+            try {
+                // Try multiple RSS feeds for better reliability
+                const feeds = [
+                    'https://api.allorigins.win/get?url=' + encodeURIComponent('http://rss.cnn.com/rss/edition.rss'),
+                    'https://api.rss2json.com/v1/api.json?rss_url=http://rss.cnn.com/rss/edition.rss&count=8',
+                    'https://corsproxy.io/?' + encodeURIComponent('http://rss.cnn.com/rss/edition.rss')
+                ];
+                
+                // Try RSS2JSON first
+                const response = await fetch('https://api.rss2json.com/v1/api.json?rss_url=http://rss.cnn.com/rss/edition.rss&count=10');
+                const data = await response.json();
+                
+                if (data.status === 'ok' && data.items) {
+                    const ticker = document.querySelector('#top-news-ticker div');
+                    let newsHTML = '';
+                    data.items.forEach(item => {
+                        // Clean up the title (remove HTML tags if any)
+                        const cleanTitle = item.title.replace(/<[^>]*>/g, '');
+                        newsHTML += `<a href="${item.link}" target="_blank">${cleanTitle}</a>`;
+                    });
+                    ticker.innerHTML = newsHTML;
+                    console.log('CNN headlines loaded successfully');
+                } else {
+                    throw new Error('RSS2JSON failed');
+                }
+            } catch (error) {
+                console.log('RSS failed, using fallback links');
+                // Fallback to static links if RSS fails
+                const ticker = document.querySelector('#top-news-ticker div');
+                ticker.innerHTML = `
+                    <a href="https://www.cnn.com" target="_blank">CNN Breaking News</a>
+                    <a href="https://www.bbc.com/news" target="_blank">BBC World News</a>
+                    <a href="https://apnews.com" target="_blank">AP Top Stories</a>
+                    <a href="https://www.reuters.com" target="_blank">Reuters Latest</a>
+                    <a href="https://news.google.com" target="_blank">Google News</a>
+                `;
+            }
+        }
+        
+        // Refresh news every 15 minutes
+        setInterval(loadRealNews, 900000);
+    </script>
     <main>
         <header>
             <section id="date-time">
