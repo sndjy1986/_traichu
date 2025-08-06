@@ -68,6 +68,12 @@
     }
     #news-content a { color: #fff; text-decoration: none; margin-right: 80px; }
     #news-content a:hover { text-decoration: underline; }
+    
+    main {
+            position: relative !important;
+            top: 10px !important;
+            top: 10px !important;
+        
     :root { --text-color: #333; --link-color: #0066cc; }
     @media (prefers-color-scheme: dark) {
         :root { --text-color: #ffffff; --link-color: #66b3ff; }
@@ -156,7 +162,7 @@
         // This script is for the CNN News Ticker
         setTimeout(() => {
             const newsContent = document.getElementById('news-content');
-            fetch('https://api.rss2json.com/v1/api.json?rss_url=http://rss.cnn.com/rss/edition.rss&api_key=tm0pr51ylq8lobpcshhokmymr4luqpbeefhox7wv&count=8')
+            fetch('https://api.rss2json.com/v1/api.json?rss_url=https%3A%2F%2Fwww.cbsnews.com%2Flatest%2Frss%2Fus&api_key=tm0pr51ylq8lobpcshhokmymr4luqpbeefhox7wv')
             .then(response => response.json())
             .then(data => {
                 if (data.status === 'ok' && data.items) {
