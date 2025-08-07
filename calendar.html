@@ -195,43 +195,60 @@
     </main>
     
     <script>
-        // This script is for the News Ticker
-        // Note: I'm leaving the functionality of your news ticker as-is,
-        // but applying the caching logic from our previous conversation would
-        // significantly speed up its loading time on this page as well.
-        setTimeout(() => {
-            const newsContent = document.getElementById('news-content');
-            fetch('https://api.rss2json.com/v1/api.json?rss_url=https%3A%2F%2Fwww.cbsnews.com%2Flatest%2Frss%2Fus&api_key=tm0pr51ylq8lobpcshhokmymr4luqpbeefhox7wv')
-            .then(response => response.json())
-            .then(data => {
-                if (data.status === 'ok' && data.items) {
-                    let html = '';
-                    data.items.forEach(item => {
-                        const cleanTitle = item.title.replace(/<[^>]*>/g, '');
-                        html += `<a href="${item.link}" target="_blank">🔴 ${cleanTitle}</a>`;
-                    });
-                    newsContent.innerHTML = html;
-                }
-            }).catch(error => {
-                newsContent.innerHTML = '🔴 CNN Breaking News 🔴 Weather Alert: Winter Storm Watch 🔴 Markets: Tech Stocks Rally';
+    // This function loads the news, using the cache for instant speed.
+    function loadNewsFeed() {
+        const newsContent = document.getElementById('news-content');
+        const cacheKey = 'foxNewsFeedCache';
+        const cacheDuration = 15 * 60 * 1000; // 15 minutes in milliseconds
+
+        // 1. Check for a cached version first.
+        const cachedData = localStorage.getItem(cacheKey);
+        if (cachedData) {
+            const { html, timestamp } = JSON.parse(cachedData);
+            
+            // 2. Check if the cached data is still "fresh".
+            if (Date.now() - timestamp < cacheDuration) {
+                console.log('Loading news instantly from cache.');
+                newsContent.innerHTML = html;
+                return; // Use the cached version and stop.
+            }
+        }
+
+        // 3. If no cache or cache is old, fetch from the network.
+        console.log('Fetching fresh news from the server.');
+        fetch('https://moxie.foxnews.com/google-publisher/latest.xml')
+        .then(response => response.text())
+        .then(str => new DOMParser().parseFromString(str, "application/xml"))
+        .then(data => {
+            const items = data.querySelectorAll("item");
+            let html = '';
+            items.forEach(item => {
+                const title = item.querySelector("title").textContent;
+                const link = item.querySelector("link").textContent;
+                html += `<a href="${link}" target="_blank">🦊 ${title}</a>`;
             });
-        }, 2000);
-        setInterval(() => {
-            const newsContent = document.getElementById('news-content');
-            fetch('https://api.rss2json.com/v1/api.json?rss_url=https%3A%2F%2Fwww.cbsnews.com%2Flatest%2Frss%2Fus&api_key=tm0pr51ylq8lobpcshhokmymr4luqpbeefhox7wv')
-            .then(response => response.json())
-            .then(data => {
-                if (data.status === 'ok' && data.items) {
-                    let html = '';
-                    data.items.forEach(item => {
-                        const cleanTitle = item.title.replace(/<[^>]*>/g, '');
-                        html += `<a href="${item.link}" target="_blank">🔴 ${cleanTitle}</a>`;
-                    });
-                    newsContent.innerHTML = html;
-                }
-            });
-        }, 900000);
-    </script>
+            
+            if (html === '') { throw new Error('No items found in RSS feed.'); }
+
+            // 4. Display the new data and save it to the cache.
+            newsContent.innerHTML = html;
+            const dataToCache = { html: html, timestamp: Date.now() };
+            localStorage.setItem(cacheKey, JSON.stringify(dataToCache));
+            
+            console.log('Headlines loaded and cached successfully!');
+        })
+        .catch(error => {
+            console.error('Error fetching or parsing RSS feed:', error);
+            newsContent.innerHTML = '🦊 Unable to load news feed. Please check back later. 🦊';
+        });
+    }
+
+    // THIS IS THE FIX: Run the function immediately when the page loads.
+    loadNewsFeed();
+
+    // This schedules a BACKGROUND REFRESH. It does NOT delay the initial start.
+    setInterval(loadNewsFeed, 900000); // 900000ms = 15 minutes
+</script>
     <script>
     // Logic for the calendar tabs
     const tabContainer = document.querySelector('.tab-container');
