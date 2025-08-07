@@ -109,7 +109,7 @@ main {
 
     <div id="news-ticker">
         <div id="news-content">
-            🔴 Loading Test RSS News Feed............
+            🔴 Loading RSS/APP News Feed............
         </div>
     </div>
 
@@ -233,7 +233,7 @@ main {
         setTimeout(() => {
             const newsContent = document.getElementById('news-content');
             
-            fetch('https://www.cnbc.com/id/100003114/device/rss/rss.html')
+            fetch('https://rss.app/feeds/v1.1/ohEYFRd7o6NqaK2g.json')
             .then(response => response.json())
             .then(data => {
                 if (data.status === 'ok' && data.items) {
@@ -250,7 +250,7 @@ main {
             })
             .catch(error => {
                 // Fallback headlines
-                newsContent.innerHTML = '🔴Breaking News 🔴 Weather Alert: Winter Storm Watch 🔴 Markets: Tech Stocks Rally 🔴 Politics: Congressional Hearing Today 🔴 Health: CDC Updates Guidelines';
+                newsContent.innerHTML = '🔴This did not work 🔴 Someone please let me know 🔴 Trying to keep up 🔴 Politics: Congressional Hearing Today 🔴 Health: CDC Updates Guidelines';
                 console.log('Using fallback headlines');
             });
         }, 2000);
@@ -258,7 +258,7 @@ main {
         // Refresh every 15 minutes
         setInterval(() => {
             const newsContent = document.getElementById('news-content');
-            fetch('https://www.politico.com/rss/politicopicks.xml')
+            fetch('https://rss.app/feeds/v1.1/ohEYFRd7o6NqaK2g.json')
             .then(response => response.json())
             .then(data => {
                 if (data.status === 'ok' && data.items) {
