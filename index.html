@@ -16,13 +16,13 @@
         transition: padding-top 0.3s ease;
     }
     
-    /* This rule applies ONLY when a weather alert is active */
+
     body.alert-active {
-        /* Makes space for the 55px alert AND the 50px news ticker */
+   
         padding-top: 105px; 
     }
 
-    /* WEATHER ALERT BANNER */
+
     #weather-alert {
         display: none;
         background-color: #d9534f;
@@ -32,18 +32,18 @@
         font-size: 18px;
         font-weight: bold;
         position: fixed;
-        top: 0; /* Pinned to the very top */
+        top: 0; 
         width: 100%;
         z-index: 10000;
         border-bottom: 2px solid #a94442;
-        height: 55px; /* Set an explicit height */
-        box-sizing: border-box; /* Ensures padding is included in height */
+        height: 55px; 
+        box-sizing: border-box; 
     }
 
-    /* NEWS TICKER */
+
     #news-ticker {
         position: fixed;
-        top: 0; /* DEFAULT: Pinned to the top */
+        top: 0; 
         left: 0;
         width: 100%;
         height: 50px;
@@ -55,9 +55,9 @@
         transition: top 0.3s ease;
     }
     
-    /* This rule applies ONLY when a weather alert is active */
+ 
     body.alert-active #news-ticker {
-        top: 55px; /* Pushes the news ticker down below the alert banner */
+        top: 55px; 
     }
     
     #news-content {
@@ -97,15 +97,15 @@
         top: 10px !important;
     }
     
-    /* === NEW DOCK STYLES FOR ICON SIZING AND ANIMATION === */
+
     #dock ul {
         list-style: none;
         padding: 0;
         margin: 0;
         display: flex;
         justify-content: space-evenly;
-        align-items: flex-end; /* Aligns icons to the bottom for the grow effect */
-        height: 60px; /* Provides space for icons to grow into */
+        align-items: flex-end; 
+        height: 60px; 
     }
 
     #dock li {
@@ -114,24 +114,24 @@
 
     #dock li a {
         display: inline-block;
-        /* Animation properties for smooth grow effect */
+  
         transition: transform 0.2s ease-out;
     }
 
     #dock li img {
-        width: 48px;  /* Set consistent icon width */
-        height: 48px; /* Set consistent icon height */
+        width: 48px;  
+        height: 48px; 
         vertical-align: middle;
     }
 
-    /* The "bounce" or grow effect on hover */
+  
     #dock li a:hover {
-    /* Combine scale and vertical movement into one property */
+
     transform: scale(1.3) translateY(-10px); 
 }
     }
 
-    /* LIGHT/DARK MODE SUPPORT */
+
     :root {
         --text-color: #333;
         --link-color: #0066cc;
@@ -210,63 +210,42 @@
                         <a href="https://dispatch.sndjy.us"><img src="https://icons.duckduckgo.com/ip3/sndjy.us.ico" class="favicon" alt="Anmed MyChart">Dispatch Timers</a></li></ul>
                 <ul>
                     <li>
-                        <a href="https://www.icloud.com/"><img src="https://icons.duckduckgo.com/ip3/apple.com.ico" class="favicon" alt="iCloud">iCloud</a>
-                    </li>
-                    <li>
-                        <a href="https://www.youtube.com"><img src="https://icons.duckduckgo.com/ip3/youtube.com.ico" class="favicon" alt="YouTube favicon">YouTube</a>
-                    </li>
-                    <li>
-                        <a href="https://telehack.com"><img src="https://icons.duckduckgo.com/ip3/telehack.com.ico" class="favicon" alt="Telehack favicon">Telehack</a>
-                    </li>
-                    <li>
-                        <a href="https://www.google.com/maps"><img src="https://icons.duckduckgo.com/ip3/maps.google.com.ico" class="favicon" alt="Google Maps favicon">Google Maps</a>
-                    </li>
-                    <li>
-                        <a href="https://cloudflare.com/"><img src="https://icons.duckduckgo.com/ip3/cloudflare.com.ico" class="favicon" alt="CloudFlare">Cloudflare</a>
-                    </li>
-                </ul>
+                        <a href="https://www.icloud.com/"><img src="https://icons.duckduckgo.com/ip3/apple.com.ico" class="favicon" alt="iCloud">iCloud</a></li><li>
+                        <a href="https://www.youtube.com"><img src="https://icons.duckduckgo.com/ip3/youtube.com.ico" class="favicon" alt="YouTube favicon">YouTube</a></li><li>
+                        <a href="https://telehack.com"><img src="https://icons.duckduckgo.com/ip3/telehack.com.ico" class="favicon" alt="Telehack favicon">Telehack</a></li><li>
+                        <a href="https://www.google.com/maps"><img src="https://icons.duckduckgo.com/ip3/maps.google.com.ico" class="favicon" alt="Google Maps favicon">Google Maps</a></li><li>
+                        <a href="https://cloudflare.com/"><img src="https://icons.duckduckgo.com/ip3/cloudflare.com.ico" class="favicon" alt="CloudFlare">Cloudflare</a></li></ul>
                 <ul>
                     <li>
-                        <a href="https://login.verizonwireless.com/accessmanager/public/c/fu/loginDisconnectedStart"><img src="https://icons.duckduckgo.com/ip3/verizonwireless.com.ico" class="favicon" alt="Verizon Wireless favicon">Verizon</a>
-                    </li>
-                    <li>
-                        <a href="https://www.duke-energy.com/my-account/sign-in"><img src="https://icons.duckduckgo.com/ip3/duke-energy.com.ico" class="favicon" alt="Duke Power favicon">Duke Energy</a>
-                    </li>
-                    <li>
-                        <a href="http://www.amazon.com"><img src="https://icons.duckduckgo.com/ip3/amazon.com.ico" class="favicon" alt="Amazon favicon">Amazon</a>
-                    </li>
-                    <li>
-                        <a href="http://www.foxcarolina.com"><img src="https://icons.duckduckgo.com/ip3/foxcarolina.com.ico" class="favicon" alt="FoxCarolina favicon">FoxCarolina</a>
-                    </li>
-                    <li>
-                        <a href="https://remotedesktop.google.com/"><img src="https://icons.duckduckgo.com/ip3/remotedesktop.google.com.ico" class="favicon" alt="Remote Desktop favicon">Remote Desktop</a>
-                    </li>
-                </ul>
+                        <a href="https://login.verizonwireless.com/accessmanager/public/c/fu/loginDisconnectedStart"><img src="https://icons.duckduckgo.com/ip3/verizonwireless.com.ico" class="favicon" alt="Verizon Wireless favicon">Verizon</a></li><li>
+                        <a href="https://www.duke-energy.com/my-account/sign-in"><img src="https://icons.duckduckgo.com/ip3/duke-energy.com.ico" class="favicon" alt="Duke Power favicon">Duke Energy</a></li><li></li>
+                        <a href="http://www.amazon.com"><img src="https://icons.duckduckgo.com/ip3/amazon.com.ico" class="favicon" alt="Amazon favicon">Amazon</a></li><li>
+                        <a href="http://www.foxcarolina.com"><img src="https://icons.duckduckgo.com/ip3/foxcarolina.com.ico" class="favicon" alt="FoxCarolina favicon">FoxCarolina</a></li><li>
+                        <a href="https://remotedesktop.google.com/"><img src="https://icons.duckduckgo.com/ip3/remotedesktop.google.com.ico" class="favicon" alt="Remote Desktop favicon">Remote Desktop</a></li></ul>
             </section>
         </section>
     </main>
     
  <script>
-    // This function loads the news, using the cache for instant speed.
     function loadNewsFeed() {
         const newsContent = document.getElementById('news-content');
         const cacheKey = 'foxNewsFeedCache';
-        const cacheDuration = 15 * 60 * 1000; // 15 minutes in milliseconds
+        const cacheDuration = 15 * 60 * 1000; 
 
-        // 1. Check for a cached version first.
+     
         const cachedData = localStorage.getItem(cacheKey);
         if (cachedData) {
             const { html, timestamp } = JSON.parse(cachedData);
             
-            // 2. Check if the cached data is still "fresh".
+
             if (Date.now() - timestamp < cacheDuration) {
                 console.log('Loading news instantly from cache.');
                 newsContent.innerHTML = html;
-                return; // Use the cached version and stop.
+                return; 
             }
         }
 
-        // 3. If no cache or cache is old, fetch from the network.
+
         console.log('Fetching fresh news from the server.');
         fetch('https://moxie.foxnews.com/google-publisher/latest.xml')
         .then(response => response.text())
@@ -282,7 +261,7 @@
             
             if (html === '') { throw new Error('No items found in RSS feed.'); }
 
-            // 4. Display the new data and save it to the cache.
+  
             newsContent.innerHTML = html;
             const dataToCache = { html: html, timestamp: Date.now() };
             localStorage.setItem(cacheKey, JSON.stringify(dataToCache));
@@ -296,7 +275,7 @@
     }
 
     loadNewsFeed();
-    setInterval(loadNewsFeed, 900000); // 900000ms = 15 minutes
+    setInterval(loadNewsFeed, 900000); 
 </script>
 </body>
 </html>
