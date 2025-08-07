@@ -110,6 +110,25 @@
         transform: none;
     }
 
+    /* Time Widget Styles - matching weather */
+    #date-time {
+        position: fixed;
+        top: 60px;
+        left: 20px;
+        display: inline-block;
+        background: transparent;
+        padding: 5px;
+        z-index: 999;
+    }
+
+    #current-time {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        font-size: 13px;
+        color: var(--text-color);
+    }
+
     #current-weather {
         display: flex;
         align-items: center;
@@ -279,6 +298,10 @@
         <header>
             <section id="date-time">
                 <h2 class="sr-only">Date & Time</h2>
+                <div id="current-time">
+                    <span id="time-display"></span>
+                    <span id="date-display"></span>
+                </div>
             </section>
             <section id="weather">
                 <div id="current-weather">
@@ -364,6 +387,28 @@
     
 <script>
     /**
+     * Updates the time and date display
+     */
+    function updateTime() {
+        const now = new Date();
+        const timeOptions = { 
+            hour: 'numeric', 
+            minute: '2-digit',
+            hour12: true 
+        };
+        const dateOptions = { 
+            weekday: 'short', 
+            month: 'short', 
+            day: 'numeric' 
+        };
+        
+        const timeString = now.toLocaleTimeString('en-US', timeOptions);
+        const dateString = now.toLocaleDateString('en-US', dateOptions);
+        
+        document.getElementById('time-display').textContent = timeString;
+        document.getElementById('date-display').textContent = dateString;
+    }
+    /**
      * Sets a dynamic greeting message based on the time of day.
      */
     function updateGreeting() {
@@ -444,11 +489,13 @@
     }
 
     // Run functions on page load
+    updateTime();
     updateGreeting();
     loadNewsFeed();
-    initializeWeatherWidget();
+    initializeWeather();
 
     // Set intervals to refresh the data periodically
+    setInterval(updateTime, 1000); // Update time every second
     setInterval(updateGreeting, 300000); // Update greeting every 5 minutes
     setInterval(loadNewsFeed, 900000); // Refresh news every 15 minutes
 </script>
