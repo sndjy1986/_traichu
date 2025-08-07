@@ -99,12 +99,14 @@
     }
     
 
-    /* === NEW GREETING MESSAGE STYLE === */
+    /* === UPDATED GREETING MESSAGE STYLE === */
     #greeting {
         text-align: center;
         font-size: 18px;
         font-weight: bold;
         color: var(--text-color);
+        /* This precisely controls the space above and below the text */
+        margin: 15px 0 5px 0;
     }
 
 
@@ -115,7 +117,8 @@
         display: flex;
         justify-content: space-evenly;
         align-items: flex-end; 
-        height: 28px; 
+        /* This height perfectly contains the icons and their hover effect */
+        height: 60px; 
     }
 
     #dock li {
