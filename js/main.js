@@ -195,7 +195,7 @@ function updateWeatherDisplay(weatherData) {
  */
 function initializeWeatherWidget() {
     // Only load real data if API key is set
-    if (WEATHER_CONFIG.API_KEY && WEATHER_CONFIG.API_KEY !== '8b093586dd2c02084b20747b888d3cfa') {
+    if (WEATHER_CONFIG.API_KEY && WEATHER_CONFIG.API_KEY !== 'YOUR_API_KEY_HERE') {
         loadWeatherData();
         // Refresh weather data every hour
         setInterval(loadWeatherData, 60 * 60 * 1000);
@@ -238,12 +238,98 @@ function fetchWeatherAlert() {
 }
 
 /**
+ * Sets a dynamic greeting message based on the time of day.
+ */
+function updateGreeting() {
+    const greetingEl = document.getElementById('greeting');
+    if (!greetingEl) return;
+    
+    const hour = new Date().getHours();
+    
+    const morningGreetings = ["Good morning, Joey!", "Rise and shine, Joey!", "Top of the morning, Joey!"];
+    const afternoonGreetings = ["Good afternoon, Joey!", "Hope you're having a great day, Joey!", "How's it going, Joey?"];
+    const eveningGreetings = ["Good evening, Joey!", "Hope you had a good day, Joey.", "Welcome back, Joey."];
+    const nightGreetings = ["Working late, Joey?", "Burning the midnight oil, Joey?", "Hi there, night owl."];
+
+    let relevantGreetings;
+
+    if (hour >= 5 && hour < 12) {
+        relevantGreetings = morningGreetings;
+    } else if (hour >= 12 && hour < 17) {
+        relevantGreetings = afternoonGreetings;
+    } else if (hour >= 17 && hour < 22) {
+        relevantGreetings = eveningGreetings;
+    } else {
+        relevantGreetings = nightGreetings;
+    }
+
+    const greeting = relevantGreetings[Math.floor(Math.random() * relevantGreetings.length)];
+    greetingEl.textContent = greeting;
+}
+
+/**
+ * Loads the RSS news feed
+ */
+function loadNewsFeed() {
+    const newsContent = document.getElementById('news-content');
+    if (!newsContent) return;
+    
+    const cacheKey = 'foxNewsFeedCache';
+    const cacheDuration = 15 * 60 * 1000; 
+
+    const cachedData = localStorage.getItem(cacheKey);
+    if (cachedData) {
+        const { html, timestamp } = JSON.parse(cachedData);
+        
+        if (Date.now() - timestamp < cacheDuration) {
+            console.log('Loading news instantly from cache.');
+            newsContent.innerHTML = html;
+            return; 
+        }
+    }
+
+    console.log('Fetching fresh news from the server.');
+    
+    // Try alternative RSS proxy service
+    fetch('https://api.rss2json.com/v1/api.json?rss_url=' + encodeURIComponent('https://moxie.foxnews.com/google-publisher/latest.xml'))
+    .then(response => response.json())
+    .then(data => {
+        let html = '';
+        if (data.items && data.items.length > 0) {
+            data.items.forEach(item => {
+                html += `<a href="${item.link}" target="_blank">🦊 ${item.title}</a>`;
+            });
+        } else {
+            throw new Error('No items found in RSS feed.');
+        }
+
+        newsContent.innerHTML = html;
+        const dataToCache = { html: html, timestamp: Date.now() };
+        localStorage.setItem(cacheKey, JSON.stringify(dataToCache));
+        
+        console.log('Headlines loaded and cached successfully!');
+    })
+    .catch(error => {
+        console.error('Error fetching or parsing RSS feed:', error);
+        newsContent.innerHTML = '🦊 News feed temporarily unavailable - check back later 🦊';
+    });
+}
+
+/**
  * MAIN FUNCTION TO INITIALIZE THE PAGE
  */
 function initializeApp() {
     // Start time updates
     updateTime();
     setInterval(updateTime, 1000);
+    
+    // Initialize greeting
+    updateGreeting();
+    setInterval(updateGreeting, 300000); // Every 5 minutes
+    
+    // Load news feed
+    loadNewsFeed();
+    setInterval(loadNewsFeed, 900000); // Every 15 minutes
     
     // Initialize weather widget
     initializeWeatherWidget();
