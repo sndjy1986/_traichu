@@ -233,7 +233,7 @@ main {
         setTimeout(() => {
             const newsContent = document.getElementById('news-content');
             
-            fetch('https://www.politico.com/rss/politicopicks.xml')
+            fetch('https://chaski.huffpost.com/us/auto/vertical/world-news')
             .then(response => response.json())
             .then(data => {
                 if (data.status === 'ok' && data.items) {
