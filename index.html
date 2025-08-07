@@ -109,7 +109,7 @@ main {
 
     <div id="news-ticker">
         <div id="news-content">
-            🔴 Loading RSS News Feed............
+            🔴 Loading Politico RSS News Feed............
         </div>
     </div>
 
@@ -233,7 +233,7 @@ main {
         setTimeout(() => {
             const newsContent = document.getElementById('news-content');
             
-            fetch('https://api.rss2json.com/v1/api.json?rss_url=https%3A%2F%2Fwww.cbsnews.com%2Flatest%2Frss%2Fus&api_key=tm0pr51ylq8lobpcshhokmymr4luqpbeefhox7wv')
+            fetch('https://www.politico.com/rss/politicopicks.xml')
             .then(response => response.json())
             .then(data => {
                 if (data.status === 'ok' && data.items) {
@@ -258,7 +258,7 @@ main {
         // Refresh every 15 minutes
         setInterval(() => {
             const newsContent = document.getElementById('news-content');
-            fetch('https://api.rss2json.com/v1/api.json?rss_url=https%3A%2F%2Fwww.cbsnews.com%2Flatest%2Frss%2Fus&api_key=tm0pr51ylq8lobpcshhokmymr4luqpbeefhox7wv')
+            fetch('https://www.politico.com/rss/politicopicks.xml')
             .then(response => response.json())
             .then(data => {
                 if (data.status === 'ok' && data.items) {
