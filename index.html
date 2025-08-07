@@ -144,12 +144,10 @@
 
     /* === BOOKMARK GRID STYLES === */
 
-    /* Reduce space between search bar and bookmarks */
     #bookmarks {
         margin-top: 15px; 
     }
 
-    /* Create the main grid container for the list */
     #bookmarks ul {
         display: flex;
         flex-wrap: wrap;
@@ -159,30 +157,28 @@
         list-style: none;
     }
 
-    /* Style each individual bookmark item */
-   #bookmarks li {
-    width: 120px;
-    margin-bottom: 15px;
-    flex-grow: 0;     /* Add this line */
-    flex-shrink: 0;   /* Add this line */
-}
+    /* This is the corrected rule */
+    #bookmarks li {
+        width: 120px;
+        margin-bottom: 15px;
+        flex-grow: 0;     /* Prevents items from stretching */
+        flex-shrink: 0;   /* Prevents items from shrinking */
+    }
 
-    /* Center the icon and text within each bookmark */
     #bookmarks a {
         display: flex;
         flex-direction: column;
         align-items: center;
         text-decoration: none;
         font-size: 14px;
-        color: var(--link-color); /* Uses the color you defined for light/dark mode */
+        color: var(--link-color);
         font-weight: bold;
     }
 
-    /* Make the icons a little larger than the text */
     .favicon {
         width: 24px;  
         height: 24px;
-        margin-bottom: 8px; /* Adds space between icon and text */
+        margin-bottom: 8px; 
     }
 </style>
 </head>
