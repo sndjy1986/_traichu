@@ -229,46 +229,63 @@ main {
     </main>
     
    <script>
-    // This function fetches and displays the news
+    // This function now includes caching logic
     function loadNewsFeed() {
         const newsContent = document.getElementById('news-content');
-        const feedUrl = 'https://moxie.foxnews.com/google-publisher/latest.xml'; // <-- NEW URL
+        const cacheKey = 'foxNewsFeedCache'; // A name for our storage item
+        const cacheDuration = 15 * 60 * 1000; // 15 minutes in milliseconds
+
+        // 1. Check for a cached version first
+        const cachedData = localStorage.getItem(cacheKey);
+        if (cachedData) {
+            const { html, timestamp } = JSON.parse(cachedData);
+            
+            // 2. Check if the cached data is still "fresh" (less than 15 mins old)
+            if (Date.now() - timestamp < cacheDuration) {
+                console.log('Loading news from local cache.');
+                newsContent.innerHTML = html;
+                return; // Stop here and use the cached version
+            }
+        }
+
+        // 3. If no cache or cache is old, fetch from the network
+        console.log('Fetching fresh news from the server.');
+        const feedUrl = 'https://moxie.foxnews.com/google-publisher/latest.xml';
 
         fetch(feedUrl)
-        .then(response => response.text()) // <-- 1. Get response as TEXT (for XML)
-        .then(str => new DOMParser().parseFromString(str, "application/xml")) // <-- 2. Parse the text into an XML document
+        .then(response => response.text())
+        .then(str => new DOMParser().parseFromString(str, "application/xml"))
         .then(data => {
-            const items = data.querySelectorAll("item"); // <-- 3. Select all <item> elements
+            const items = data.querySelectorAll("item");
             let html = '';
 
             items.forEach(item => {
-                // 4. Get the text from the <title> and <link> tags within each <item>
                 const title = item.querySelector("title").textContent;
                 const link = item.querySelector("link").textContent;
-                
-                // Use a different icon for the new feed source, or keep the red dot
                 html += `<a href="${link}" target="_blank">🦊 ${title}</a>`;
             });
             
             if (html === '') {
-                // If the loop produced no HTML, something was wrong with the feed structure
                 throw new Error('No items found in RSS feed.');
             }
 
+            // 4. Display the new data AND save it to the cache with a new timestamp
             newsContent.innerHTML = html;
-            console.log('Fox News headlines loaded successfully!');
+            const dataToCache = { html: html, timestamp: Date.now() };
+            localStorage.setItem(cacheKey, JSON.stringify(dataToCache));
+            
+            console.log('Fox News headlines loaded and cached successfully!');
         })
         .catch(error => {
             console.error('Error fetching or parsing RSS feed:', error);
-            // Updated fallback headlines
             newsContent.innerHTML = '🦊 Unable to load Fox News feed. 🦊 Please check back later. 🦊';
-            console.log('Using fallback headlines');
         });
     }
 
-    // Load the news feed when the page loads (after a short delay)
-    setTimeout(loadNewsFeed, 2000);
-
-    // Refresh every 15 minutes (900000 milliseconds)
-    setInterval(loadNewsFeed, 900000);
+    // Load the news feed immediately on page load
+    loadNewsFeed();
+    
+    // You no longer need the setInterval, because the logic now handles when to refresh on its own on the *next page load*. 
+    // If you want the ticker to auto-update without a page refresh, you can keep it:
+    setInterval(loadNewsFeed, 900000); // This will check for a fresh version every 15 mins
 </script>
