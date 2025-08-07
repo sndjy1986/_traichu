@@ -109,7 +109,7 @@ main {
 
     <div id="news-ticker">
         <div id="news-content">
-            🔴 Loading New RSS News Feed............
+            🔴 Loading Test RSS News Feed............
         </div>
     </div>
 
@@ -233,7 +233,7 @@ main {
         setTimeout(() => {
             const newsContent = document.getElementById('news-content');
             
-            fetch('https://chaski.huffpost.com/us/auto/vertical/world-news')
+            fetch('https://www.cnbc.com/id/100003114/device/rss/rss.html')
             .then(response => response.json())
             .then(data => {
                 if (data.status === 'ok' && data.items) {
