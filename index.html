@@ -99,6 +99,17 @@
     }
     
 
+    /* === NEW GREETING MESSAGE STYLE === */
+    #greeting {
+        text-align: center;
+        font-size: 24px;
+        font-weight: bold;
+        color: var(--text-color);
+        /* This margin separates it from the GIF and pushes the dock down */
+        margin: 25px 0 20px 0;
+    }
+
+
     #dock ul {
         list-style: none;
         padding: 0;
@@ -115,7 +126,7 @@
 
     #dock li a {
         display: inline-block;
-   
+    
         transition: transform 0.2s ease-out;
     }
 
@@ -207,6 +218,8 @@
                 <img src="https://raw.githubusercontent.com/sndjy1986/_traichu/refs/heads/main/mario.gif" alt="Mario GIF" style="width: 360px; height: 240px;">
             </aside>
             
+            <h2 id="greeting"></h2>
+
             <nav id="dock">
                 <ul>
                     <li><a href="https://mail.google.com" title="Gmail"><img src="https://icons.duckduckgo.com/ip3/gmail.google.com.ico" alt="Gmail"></a></li>
@@ -226,7 +239,7 @@
                 <form action="https://www.google.com/search" method="get">
                 <input type="text" id="q" name="q" autofocus>
                 <button class="sr-only" tabindex="-1">Search</button>
-               </form>
+                </form>
             </section>
 
             <section id="bookmarks">
@@ -267,13 +280,44 @@
         </section>
     </main>
     
- <script>
+<script>
+    /**
+     * Sets a dynamic greeting message based on the time of day.
+     */
+    function updateGreeting() {
+        const greetingEl = document.getElementById('greeting');
+        const hour = new Date().getHours();
+        
+        const morningGreetings = ["Good morning, Joey!", "Rise and shine, Joey!", "Top of the morning, Joey!"];
+        const afternoonGreetings = ["Good afternoon, Joey!", "Hope you're having a great day, Joey!", "How's it going, Joey?"];
+        const eveningGreetings = ["Good evening, Joey!", "Hope you had a good day, Joey.", "Welcome back, Joey."];
+        const nightGreetings = ["Working late, Joey?", "Burning the midnight oil, Joey?", "Hi there, night owl."];
+
+        let relevantGreetings;
+
+        if (hour >= 5 && hour < 12) { // 5:00 AM - 11:59 AM
+            relevantGreetings = morningGreetings;
+        } else if (hour >= 12 && hour < 17) { // 12:00 PM - 4:59 PM
+            relevantGreetings = afternoonGreetings;
+        } else if (hour >= 17 && hour < 22) { // 5:00 PM - 9:59 PM
+            relevantGreetings = eveningGreetings;
+        } else { // 10:00 PM - 4:59 AM
+            relevantGreetings = nightGreetings;
+        }
+
+        // Pick a random greeting from the selected list
+        const greeting = relevantGreetings[Math.floor(Math.random() * relevantGreetings.length)];
+        
+        greetingEl.textContent = greeting;
+    }
+
+
     function loadNewsFeed() {
         const newsContent = document.getElementById('news-content');
         const cacheKey = 'foxNewsFeedCache';
         const cacheDuration = 15 * 60 * 1000; 
 
-   
+    
         const cachedData = localStorage.getItem(cacheKey);
         if (cachedData) {
             const { html, timestamp } = JSON.parse(cachedData);
@@ -315,8 +359,13 @@
         });
     }
 
+    // Run functions on page load
+    updateGreeting();
     loadNewsFeed();
-    setInterval(loadNewsFeed, 900000); 
+
+    // Set intervals to refresh the data periodically
+    setInterval(updateGreeting, 300000); // Update greeting every 5 minutes
+    setInterval(loadNewsFeed, 900000); // Refresh news every 15 minutes
 </script>
 </body>
 </html>
