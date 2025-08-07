@@ -15,6 +15,7 @@
         margin: 0;
         padding-top: 50px;
         transition: padding-top 0.1s ease;
+        background-color: #f9f9f9; /* Added a light background for contrast */
     }
     body.alert-active {
         padding-top: 105px; 
@@ -54,67 +55,100 @@
         transition: top 0.3s ease;
     }
     body.alert-active #news-ticker { top: 55px; }
+
+    /* --- MODIFICATION: ROBUST NEWS TICKER ANIMATION --- */
     #news-content {
         position: absolute;
         white-space: nowrap;
-        animation: scroll 90s linear infinite;
         line-height: 50px;
         font-size: 16px;
         font-weight: bold;
+
+        /* Using the improved animation properties */
+        animation-name: scroll-left;
+        animation-duration: 90s;
+        animation-timing-function: linear;
+        animation-iteration-count: infinite;
+        will-change: transform;
     }
-    @keyframes scroll {
-        0% { transform: translateX(100%); }
+    @keyframes scroll-left {
+        0% { transform: translateX(100vw); }
         100% { transform: translateX(-100%); }
     }
+    /* --- END MODIFICATION --- */
+
     #news-content a { color: #fff; text-decoration: none; margin-right: 80px; }
     #news-content a:hover { text-decoration: underline; }
     
     main {
-            position: relative !important;
-            top: 10px !important;
-            top: 10px !important;
+        position: relative !important;
+        top: 10px !important;
+    }
         
     :root { --text-color: #333; --link-color: #0066cc; }
     @media (prefers-color-scheme: dark) {
         :root { --text-color: #ffffff; --link-color: #66b3ff; }
+        body { background-color: #121212; }
     }
 
-    /* --- REVISED CALENDAR TAB STYLES (USING FLEXBOX) --- */
+    /* --- MODIFICATION: REDESIGNED CALENDAR STYLES --- */
+    .calendar-wrapper {
+        border: 1px solid #ddd;
+        border-radius: 8px; /* Rounded corners for the whole container */
+        overflow: hidden; /* Keeps content inside the rounded corners */
+        box-shadow: 0 4px 8px rgba(0,0,0,0.05); /* Subtle shadow for depth */
+        background-color: #fff;
+    }
     .tab-container {
-        border-bottom: 2px solid #ccc;
-        margin-bottom: 10px;
-        display: flex; /* This is the key change */
-        justify-content: space-between; /* Pushes tabs left, home button right */
-        align-items: center; /* Vertically aligns them */
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 10px 10px 0 10px; /* Padding for spacing */
+        border-bottom: 1px solid #ddd;
+        background-color: #f7f7f7;
     }
     .tab-link {
-        background-color: #f1f1f1;
-        border: 1px solid #ccc;
+        background-color: transparent; /* Let container color show */
+        border: 1px solid transparent; /* Keep space but hide border */
         border-bottom: none;
         border-radius: 5px 5px 0 0;
         padding: 10px 20px;
         cursor: pointer;
         font-size: 16px;
         margin-right: 5px;
+        position: relative;
+        bottom: -1px; /* Sits on the border line */
     }
-    .tab-link:hover { background-color: #ddd; }
+    .tab-link:hover {
+        background-color: #e9e9e9;
+    }
     .tab-link.active {
-        background-color: #fff;
-        border-bottom: 2px solid #fff;
-        margin-bottom: -2px;
+        background-color: #fff; /* Match the content area background */
+        border-color: #ddd;
+        border-bottom: 1px solid #fff; /* Hide bottom border */
     }
     .home-button {
         background-color: #e7e7e7;
         color: #333;
         text-decoration: none;
         border-radius: 5px;
-        padding: 10px 20px;
+        padding: 8px 16px; /* Slightly smaller */
         font-size: 16px;
         border: 1px solid #ccc;
+        transition: background-color 0.2s ease;
     }
-    .home-button:hover { background-color: #ddd; }
-    .tab-content { display: none; padding: 15px; border: 1px solid #ccc; border-top: none; }
-    .tab-content.active { display: block; }
+    .home-button:hover {
+        background-color: #d8d8d8;
+    }
+    .tab-content {
+        display: none;
+        padding: 15px;
+        /* No border needed here, as the wrapper provides it */
+    }
+    .tab-content.active {
+        display: block;
+    }
+    /* --- END MODIFICATION --- */
 </style>
 </head>
 <body>
@@ -132,34 +166,39 @@
         </header>
 
         <section id="calendar-page-content" style="padding: 20px;">
-            <div class="tab-container">
-                <div class="tab-buttons">
-                    <button class="tab-link active" data-tab="personal-calendar">Our Calendar</button>
-                    <button class="tab-link" data-tab="work-calendar">Arianna's Calendar</button>
-                    <button class="tab-link" data-tab="wendyandcorey">Wendy and Corey</button>
+            <div class="calendar-wrapper">
+                <div class="tab-container">
+                    <div class="tab-buttons">
+                        <button class="tab-link active" data-tab="personal-calendar">Our Calendar</button>
+                        <button class="tab-link" data-tab="work-calendar">Arianna's Calendar</button>
+                        <button class="tab-link" data-tab="wendyandcorey">Wendy and Corey</button>
+                    </div>
+                    <a href="index.html" class="home-button">Return to Homepage</a>
                 </div>
-                <a href="index.html" class="home-button">Return to Homepage</a>
-            </div>
 
-            <div class="tab-content-wrapper">
-                <div id="personal-calendar" class="tab-content active">
-                    <h3>Our Calendar</h3>
-                    <iframe src="https://calendar.google.com/calendar/embed?src=sndjy1986%40gmail.com&ctz=America%2FNew_York" style="border:0" width="100%" height="600" frameborder="0" scrolling="no"></iframe>
-                </div>
-                <div id="work-calendar" class="tab-content">
-                    <h3>Arianna's Calendar</h3>
-                    <iframe src="https://calendar.google.com/calendar/embed?src=463214c1bc4698718097fabc64aa7670b519e9250ee6e7992203339af222633d%40group.calendar.google.com&ctz=America%2FNew_York" style="border: 0" width="100%" height="600" frameborder="0" scrolling="no"></iframe>
-                </div>
-                <div id="wendyandcorey" class="tab-content">
-                    <h3>Wendy and Corey</h3>
-                    <iframe src="https://calendar.google.com/calendar/embed?src=85f6604ee69e3a3eb2673d64c278a893529e0db366b47c96493ff933a36252e6%40group.calendar.google.com&ctz=America%2FNew_York" style="border: 0" width="100%" height="600" frameborder="0" scrolling="no"></iframe>
+                <div class="tab-content-wrapper">
+                    <div id="personal-calendar" class="tab-content active">
+                        <h3>Our Calendar</h3>
+                        <iframe src="https://calendar.google.com/calendar/embed?src=sndjy1986%40gmail.com&ctz=America%2FNew_York" style="border:0" width="100%" height="600" frameborder="0" scrolling="no"></iframe>
+                    </div>
+                    <div id="work-calendar" class="tab-content">
+                        <h3>Arianna's Calendar</h3>
+                        <iframe src="https://calendar.google.com/calendar/embed?src=463214c1bc4698718097fabc64aa7670b519e9250ee6e7992203339af222633d%40group.calendar.google.com&ctz=America%2FNew_York" style="border: 0" width="100%" height="600" frameborder="0" scrolling="no"></iframe>
+                    </div>
+                    <div id="wendyandcorey" class="tab-content">
+                        <h3>Wendy and Corey</h3>
+                        <iframe src="https://calendar.google.com/calendar/embed?src=85f6604ee69e3a3eb2673d64c278a893529e0db366b47c96493ff933a36252e6%40group.calendar.google.com&ctz=America%2FNew_York" style="border: 0" width="100%" height="600" frameborder="0" scrolling="no"></iframe>
+                    </div>
                 </div>
             </div>
         </section>
     </main>
     
     <script>
-        // This script is for the CNN News Ticker
+        // This script is for the News Ticker
+        // Note: I'm leaving the functionality of your news ticker as-is,
+        // but applying the caching logic from our previous conversation would
+        // significantly speed up its loading time on this page as well.
         setTimeout(() => {
             const newsContent = document.getElementById('news-content');
             fetch('https://api.rss2json.com/v1/api.json?rss_url=https%3A%2F%2Fwww.cbsnews.com%2Flatest%2Frss%2Fus&api_key=tm0pr51ylq8lobpcshhokmymr4luqpbeefhox7wv')
