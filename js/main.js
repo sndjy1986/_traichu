@@ -1,29 +1,50 @@
 /**
  * 1. DISPLAYS THE DATE AND TIME
- * This function updates the time display to match the new HTML structure.
+ * This function updates the time display in the custom format.
  */
 function updateTime() {
     const now = new Date();
-    const timeOptions = { 
+    
+    // Format: Aug 7th, 2025
+    const month = now.toLocaleDateString('en-US', { month: 'short' });
+    const day = now.getDate();
+    const year = now.getFullYear();
+    
+    // Add ordinal suffix (1st, 2nd, 3rd, 4th, etc.)
+    const getOrdinalSuffix = (day) => {
+        if (day > 3 && day < 21) return 'th';
+        switch (day % 10) {
+            case 1: return 'st';
+            case 2: return 'nd';
+            case 3: return 'rd';
+            default: return 'th';
+        }
+    };
+    
+    const dateString = `${month} ${day}${getOrdinalSuffix(day)}, ${year}`;
+    
+    // Format: -Thursday-
+    const weekday = `-${now.toLocaleDateString('en-US', { weekday: 'long' })}-`;
+    
+    // Format: 5:36PM
+    const timeString = now.toLocaleTimeString('en-US', { 
         hour: 'numeric', 
         minute: '2-digit',
         hour12: true 
-    };
-    const dateOptions = { 
-        weekday: 'short', 
-        month: 'short', 
-        day: 'numeric' 
-    };
+    }).replace(' ', ''); // Remove space between time and AM/PM
     
-    const timeString = now.toLocaleTimeString('en-US', timeOptions);
-    const dateString = now.toLocaleDateString('en-US', dateOptions);
-    
-    // Update the new HTML structure
+    // Update the HTML elements
     const timeDisplay = document.getElementById('time-display');
     const dateDisplay = document.getElementById('date-display');
     
-    if (timeDisplay) timeDisplay.textContent = timeString;
-    if (dateDisplay) dateDisplay.textContent = dateString;
+    if (timeDisplay) {
+        timeDisplay.innerHTML = `${dateString}<br>${weekday}<br>${timeString}`;
+    }
+    
+    // Hide the date display since we're showing everything in time-display
+    if (dateDisplay) {
+        dateDisplay.style.display = 'none';
+    }
 }
 
 // Weather API Configuration
