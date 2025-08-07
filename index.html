@@ -228,50 +228,47 @@ main {
         </section>
     </main>
     
-    <script>
-        // Load CNN headlines
-        setTimeout(() => {
-            const newsContent = document.getElementById('news-content');
-            
-            fetch('https://rss.app/feeds/v1.1/ohEYFRd7o6NqaK2g.json')
-            .then(response => response.json())
-            .then(data => {
-                if (data.status === 'ok' && data.items) {
-                    let html = '';
-                    data.items.forEach(item => {
-                        const cleanTitle = item.title.replace(/<[^>]*>/g, '');
-                        html += `<a href="${item.link}" target="_blank">🔴 ${cleanTitle}</a>`;
-                    });
-                    newsContent.innerHTML = html;
-                    console.log('CNN headlines loaded successfully!');
-                } else {
-                    throw new Error('RSS failed');
-                }
-            })
-            .catch(error => {
-                // Fallback headlines
-                newsContent.innerHTML = '🔴This did not work 🔴 Someone please let me know 🔴 Trying to keep up 🔴 Politics: Congressional Hearing Today 🔴 Health: CDC Updates Guidelines';
-                console.log('Using fallback headlines');
+   <script>
+    // This function fetches and displays the news
+    function loadNewsFeed() {
+        const newsContent = document.getElementById('news-content');
+        const feedUrl = 'https://moxie.foxnews.com/google-publisher/latest.xml'; // <-- NEW URL
+
+        fetch(feedUrl)
+        .then(response => response.text()) // <-- 1. Get response as TEXT (for XML)
+        .then(str => new DOMParser().parseFromString(str, "application/xml")) // <-- 2. Parse the text into an XML document
+        .then(data => {
+            const items = data.querySelectorAll("item"); // <-- 3. Select all <item> elements
+            let html = '';
+
+            items.forEach(item => {
+                // 4. Get the text from the <title> and <link> tags within each <item>
+                const title = item.querySelector("title").textContent;
+                const link = item.querySelector("link").textContent;
+                
+                // Use a different icon for the new feed source, or keep the red dot
+                html += `<a href="${link}" target="_blank">🦊 ${title}</a>`;
             });
-        }, 2000);
-        
-        // Refresh every 15 minutes
-        setInterval(() => {
-            const newsContent = document.getElementById('news-content');
-            fetch('https://rss.app/feeds/v1.1/ohEYFRd7o6NqaK2g.json')
-            .then(response => response.json())
-            .then(data => {
-                if (data.status === 'ok' && data.items) {
-                    let html = '';
-                    data.items.forEach(item => {
-                        const cleanTitle = item.title.replace(/<[^>]*>/g, '');
-                        html += `<a href="${item.link}" target="_blank">🔴 ${cleanTitle}</a>`;
-                    });
-                    newsContent.innerHTML = html;
-                }
-            })
-            .catch(error => console.log('Refresh failed, keeping current headlines'));
-        }, 900000);
-    </script>
-</body>
-</html>
+            
+            if (html === '') {
+                // If the loop produced no HTML, something was wrong with the feed structure
+                throw new Error('No items found in RSS feed.');
+            }
+
+            newsContent.innerHTML = html;
+            console.log('Fox News headlines loaded successfully!');
+        })
+        .catch(error => {
+            console.error('Error fetching or parsing RSS feed:', error);
+            // Updated fallback headlines
+            newsContent.innerHTML = '🦊 Unable to load Fox News feed. 🦊 Please check back later. 🦊';
+            console.log('Using fallback headlines');
+        });
+    }
+
+    // Load the news feed when the page loads (after a short delay)
+    setTimeout(loadNewsFeed, 2000);
+
+    // Refresh every 15 minutes (900000 milliseconds)
+    setInterval(loadNewsFeed, 900000);
+</script>
