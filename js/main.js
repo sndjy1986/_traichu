@@ -1,20 +1,34 @@
 /**
  * 1. DISPLAYS THE DATE AND TIME
- * This function updates the clock every second.
+ * This function updates the time display to match the new HTML structure.
  */
-function dateTime() {
-    const date = new Date();
-    const today = date.toDateString();
-    const time = date.toLocaleTimeString();
-    document.getElementById('date-time').innerHTML = `<p id="date">${today}</p><p id="time">${time}</p>`;
-    setTimeout(dateTime, 1000);
+function updateTime() {
+    const now = new Date();
+    const timeOptions = { 
+        hour: 'numeric', 
+        minute: '2-digit',
+        hour12: true 
+    };
+    const dateOptions = { 
+        weekday: 'short', 
+        month: 'short', 
+        day: 'numeric' 
+    };
+    
+    const timeString = now.toLocaleTimeString('en-US', timeOptions);
+    const dateString = now.toLocaleDateString('en-US', dateOptions);
+    
+    // Update the new HTML structure
+    const timeDisplay = document.getElementById('time-display');
+    const dateDisplay = document.getElementById('date-display');
+    
+    if (timeDisplay) timeDisplay.textContent = timeString;
+    if (dateDisplay) dateDisplay.textContent = dateString;
 }
-
-// Add this to your main.js file
 
 // Weather API Configuration
 const WEATHER_CONFIG = {
-    API_KEY: '8b093586dd2c02084b20747b888d3cfa', // Replace with your OpenWeatherMap API key
+    API_KEY: '8b093586dd2c02084b20747b888d3cfa', // Your OpenWeatherMap API key
     LAT: '34.5034', // Anderson, SC coordinates
     LON: '-82.6501',
     CACHE_DURATION: 30 * 60 * 1000 // 30 minutes cache
@@ -69,9 +83,13 @@ async function loadWeatherData() {
         console.error('Error loading weather data:', error);
         
         // Show fallback display
-        document.getElementById('current-temp').textContent = 'Weather unavailable';
-        document.getElementById('weather-icon').src = 'https://openweathermap.org/img/w/01d.png';
-        document.getElementById('current-location').textContent = 'Anderson, SC';
+        const tempEl = document.getElementById('current-temp');
+        const iconEl = document.getElementById('weather-icon');
+        const locationEl = document.getElementById('current-location');
+        
+        if (tempEl) tempEl.textContent = 'Weather unavailable';
+        if (iconEl) iconEl.src = 'https://openweathermap.org/img/w/01d.png';
+        if (locationEl) locationEl.textContent = 'Anderson, SC';
     }
 }
 
@@ -145,70 +163,49 @@ function processWeatherData(currentData, forecastData) {
  */
 function updateWeatherDisplay(weatherData) {
     // Update current weather
-    document.getElementById('current-temp').textContent = `${weatherData.current.temp}°F`;
-    document.getElementById('weather-icon').src = `https://openweathermap.org/img/w/${weatherData.current.icon}.png`;
-    document.getElementById('weather-icon').alt = weatherData.current.description;
-    document.getElementById('current-location').textContent = weatherData.current.location;
+    const tempEl = document.getElementById('current-temp');
+    const iconEl = document.getElementById('weather-icon');
+    const locationEl = document.getElementById('current-location');
+    
+    if (tempEl) tempEl.textContent = `${weatherData.current.temp}°F`;
+    if (iconEl) {
+        iconEl.src = `https://openweathermap.org/img/w/${weatherData.current.icon}.png`;
+        iconEl.alt = weatherData.current.description;
+    }
+    if (locationEl) locationEl.textContent = weatherData.current.location;
 
     // Update forecast
     const forecastContainer = document.getElementById('forecast-days');
-    forecastContainer.innerHTML = weatherData.forecast.map(day => `
-        <div class="forecast-day">
-            <span class="day-name">${day.day}</span>
-            <img class="day-icon" src="https://openweathermap.org/img/w/${day.icon}.png" alt="${day.description}">
-            <div class="temps">
-                <span class="high-temp">${day.high}°</span>
-                <span class="low-temp">${day.low}°</span>
+    if (forecastContainer) {
+        forecastContainer.innerHTML = weatherData.forecast.map(day => `
+            <div class="forecast-day">
+                <span class="day-name">${day.day}</span>
+                <img class="day-icon" src="https://openweathermap.org/img/w/${day.icon}.png" alt="${day.description}">
+                <div class="temps">
+                    <span class="high-temp">${day.high}°</span>
+                    <span class="low-temp">${day.low}°</span>
+                </div>
             </div>
-        </div>
-    `).join('');
-}
-
-/**
- * Initialize weather widget (call this instead of initializeWeather in your HTML)
- */
-function initializeWeatherWidget() {
-    // Only load real data if API key is set
-    if (WEATHER_CONFIG.API_KEY && WEATHER_CONFIG.API_KEY !== 'YOUR_API_KEY_HERE') {
-        loadWeatherData();
-        // Refresh weather data every hour
-        setInterval(loadWeatherData, 60 * 60 * 1000);
-    } else {
-        // Show mock data if no API key
-        console.log('No weather API key set, showing mock data');
-        showMockWeatherData();
+        `).join('');
     }
 }
 
 /**
- * Shows mock weather data for testing
+ * Initialize weather widget
  */
-function showMockWeatherData() {
-    const mockData = {
-        current: {
-            temp: 72,
-            icon: '01d',
-            description: 'Clear sky',
-            location: 'Anderson, SC'
-        },
-        forecast: [
-            { day: 'Today', icon: '01d', high: 75, low: 55, description: 'Clear' },
-            { day: 'Mon', icon: '02d', high: 78, low: 58, description: 'Partly cloudy' },
-            { day: 'Tue', icon: '10d', high: 68, low: 45, description: 'Light rain' },
-            { day: 'Wed', icon: '04d', high: 71, low: 50, description: 'Cloudy' },
-            { day: 'Thu', icon: '01d', high: 76, low: 54, description: 'Clear' }
-        ]
-    };
-    
-    setTimeout(() => updateWeatherDisplay(mockData), 1000);
+function initializeWeatherWidget() {
+    // Only load real data if API key is set
+    if (WEATHER_CONFIG.API_KEY && WEATHER_CONFIG.API_KEY !== '8b093586dd2c02084b20747b888d3cfa') {
+        loadWeatherData();
+        // Refresh weather data every hour
+        setInterval(loadWeatherData, 60 * 60 * 1000);
+    } else {
+        console.log('No weather API key set');
+    }
 }
 
-// Export functions if using modules, or just call directly
-// Uncomment the line below and add your API key to WEATHER_CONFIG.API_KEY above
-// initializeWeatherWidget();
 /**
- * 3. FETCHES AND DISPLAYS LIVE NWS WEATHER ALERTS
- * This function connects to the NWS API for real-time alerts.
+ * FETCHES AND DISPLAYS LIVE NWS WEATHER ALERTS
  */
 function fetchWeatherAlert() {
     const alertContainer = document.getElementById('weather-alert');
@@ -233,25 +230,28 @@ function fetchWeatherAlert() {
         .catch(error => {
             console.error('Error fetching NWS weather alert:', error);
             // Also hide the banner if the API call fails
-            alertContainer.style.display = 'none';
-            document.body.classList.remove('alert-active');
+            if (alertContainer) {
+                alertContainer.style.display = 'none';
+                document.body.classList.remove('alert-active');
+            }
         });
 }
 
 /**
- * 4. MAIN FUNCTION TO INITIALIZE THE PAGE
- * This function runs all the startup tasks.
+ * MAIN FUNCTION TO INITIALIZE THE PAGE
  */
 function initializeApp() {
-    dateTime();
-    weatherBalloon(4569298); // Anderson, SC city ID
+    // Start time updates
+    updateTime();
+    setInterval(updateTime, 1000);
     
-    // Check for a weather alert immediately on load
+    // Initialize weather widget
+    initializeWeatherWidget();
+    
+    // Check for weather alerts
     fetchWeatherAlert();
-    
-    // Set the alert to re-check every 10 minutes (600,000 milliseconds)
-    setInterval(fetchWeatherAlert, 600000); 
+    setInterval(fetchWeatherAlert, 600000); // Every 10 minutes
 }
 
-// This line waits for the HTML to be fully loaded, then runs the app.
+// Wait for HTML to be loaded, then run the app
 document.addEventListener('DOMContentLoaded', initializeApp);
