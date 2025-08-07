@@ -95,46 +95,44 @@
     
     /* Weather Widget Styles */
     #weather {
-        position: relative;
+        position: fixed;
+        top: 60px;
+        right: 20px;
         display: inline-block;
-        background: rgba(255, 255, 255, 0.1);
-        backdrop-filter: blur(10px);
-        border-radius: 12px;
-        padding: 10px 15px;
-        margin: 10px;
+        background: transparent;
+        padding: 5px;
         cursor: pointer;
         transition: all 0.3s ease;
-        border: 1px solid rgba(255, 255, 255, 0.2);
+        z-index: 999;
     }
 
     #weather:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+        transform: none;
     }
 
     #current-weather {
         display: flex;
         align-items: center;
-        gap: 8px;
-        font-size: 14px;
+        gap: 6px;
+        font-size: 13px;
         color: var(--text-color);
     }
 
     #weather-icon {
-        width: 24px;
-        height: 24px;
+        width: 20px;
+        height: 20px;
     }
 
     #forecast-panel {
         position: absolute;
         top: 100%;
-        left: 0;
+        right: 0;
         background: rgba(255, 255, 255, 0.95);
         backdrop-filter: blur(15px);
         border-radius: 12px;
         padding: 15px;
         margin-top: 5px;
-        min-width: 350px;
+        min-width: 280px;
         opacity: 0;
         visibility: hidden;
         transform: translateY(-10px);
@@ -464,47 +462,6 @@
             newsContent.innerHTML = '🦊 Unable to load news feed. Please check back later. 🦊';
         });
     }
-
-    // Weather functionality with mock data for now
-    function initializeWeather() {
-        // Show loading state initially
-        document.getElementById('current-temp').textContent = 'Loading...';
-        
-        // Mock data for demonstration
-        setTimeout(() => {
-            document.getElementById('current-temp').textContent = '72°F';
-            document.getElementById('weather-icon').src = 'https://openweathermap.org/img/w/01d.png';
-            
-            document.getElementById('forecast-days').innerHTML = `
-                <div class="forecast-day">
-                    <span class="day-name">Today</span>
-                    <img class="day-icon" src="https://openweathermap.org/img/w/01d.png" alt="Today">
-                    <div class="temps"><span class="high-temp">75°</span><span class="low-temp">55°</span></div>
-                </div>
-                <div class="forecast-day">
-                    <span class="day-name">Mon</span>
-                    <img class="day-icon" src="https://openweathermap.org/img/w/02d.png" alt="Monday">
-                    <div class="temps"><span class="high-temp">78°</span><span class="low-temp">58°</span></div>
-                </div>
-                <div class="forecast-day">
-                    <span class="day-name">Tue</span>
-                    <img class="day-icon" src="https://openweathermap.org/img/w/10d.png" alt="Tuesday">
-                    <div class="temps"><span class="high-temp">68°</span><span class="low-temp">45°</span></div>
-                </div>
-                <div class="forecast-day">
-                    <span class="day-name">Wed</span>
-                    <img class="day-icon" src="https://openweathermap.org/img/w/04d.png" alt="Wednesday">
-                    <div class="temps"><span class="high-temp">71°</span><span class="low-temp">50°</span></div>
-                </div>
-                <div class="forecast-day">
-                    <span class="day-name">Thu</span>
-                    <img class="day-icon" src="https://openweathermap.org/img/w/01d.png" alt="Thursday">
-                    <div class="temps"><span class="high-temp">76°</span><span class="low-temp">54°</span></div>
-                </div>
-            `;
-        }, 1000);
-    }
-
     // Run functions on page load
     updateGreeting();
     loadNewsFeed();
