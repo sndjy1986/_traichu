@@ -63,7 +63,7 @@
     #news-content {
         position: absolute;
         white-space: nowrap;
-        animation: scroll 230s linear infinite;
+        animation: scroll 250s linear infinite;
         line-height: 50px;
         font-size: 16px;
         font-weight: bold;
@@ -228,64 +228,58 @@ main {
         </section>
     </main>
     
-   <script>
-    // This function now includes caching logic
+  <script>
+    // This function loads the news, using the cache for instant speed.
     function loadNewsFeed() {
         const newsContent = document.getElementById('news-content');
-        const cacheKey = 'foxNewsFeedCache'; // A name for our storage item
+        const cacheKey = 'foxNewsFeedCache';
         const cacheDuration = 15 * 60 * 1000; // 15 minutes in milliseconds
 
-        // 1. Check for a cached version first
+        // 1. Check for a cached version first.
         const cachedData = localStorage.getItem(cacheKey);
         if (cachedData) {
             const { html, timestamp } = JSON.parse(cachedData);
             
-            // 2. Check if the cached data is still "fresh" (less than 15 mins old)
+            // 2. Check if the cached data is still "fresh".
             if (Date.now() - timestamp < cacheDuration) {
-                console.log('Loading news from local cache.');
+                console.log('Loading news instantly from cache.');
                 newsContent.innerHTML = html;
-                return; // Stop here and use the cached version
+                return; // Use the cached version and stop.
             }
         }
 
-        // 3. If no cache or cache is old, fetch from the network
+        // 3. If no cache or cache is old, fetch from the network.
         console.log('Fetching fresh news from the server.');
-        const feedUrl = 'https://moxie.foxnews.com/google-publisher/latest.xml';
-
-        fetch(feedUrl)
+        fetch('https://moxie.foxnews.com/google-publisher/latest.xml')
         .then(response => response.text())
         .then(str => new DOMParser().parseFromString(str, "application/xml"))
         .then(data => {
             const items = data.querySelectorAll("item");
             let html = '';
-
             items.forEach(item => {
                 const title = item.querySelector("title").textContent;
                 const link = item.querySelector("link").textContent;
                 html += `<a href="${link}" target="_blank">🦊 ${title}</a>`;
             });
             
-            if (html === '') {
-                throw new Error('No items found in RSS feed.');
-            }
+            if (html === '') { throw new Error('No items found in RSS feed.'); }
 
-            // 4. Display the new data AND save it to the cache with a new timestamp
+            // 4. Display the new data and save it to the cache.
             newsContent.innerHTML = html;
             const dataToCache = { html: html, timestamp: Date.now() };
             localStorage.setItem(cacheKey, JSON.stringify(dataToCache));
             
-            console.log('Fox News headlines loaded and cached successfully!');
+            console.log('Headlines loaded and cached successfully!');
         })
         .catch(error => {
             console.error('Error fetching or parsing RSS feed:', error);
-            newsContent.innerHTML = '🦊 Unable to load Fox News feed. 🦊 Please check back later. 🦊';
+            newsContent.innerHTML = '🦊 Unable to load news feed. Please check back later. 🦊';
         });
     }
 
-    // Load the news feed immediately on page load
+    // THIS IS THE FIX: Run the function immediately when the page loads.
     loadNewsFeed();
-    
-    // You no longer need the setInterval, because the logic now handles when to refresh on its own on the *next page load*. 
-    // If you want the ticker to auto-update without a page refresh, you can keep it:
-    setInterval(loadNewsFeed, 900000); // This will check for a fresh version every 15 mins
+
+    // This schedules a BACKGROUND REFRESH. It does NOT delay the initial start.
+    setInterval(loadNewsFeed, 900000); // 900000ms = 15 minutes
 </script>
