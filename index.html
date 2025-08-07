@@ -115,7 +115,7 @@
     #dock li a {
         display: inline-block;
         /* Animation properties for smooth grow effect */
-        transition: transform 0.2s ease-out, margin-bottom 0.2s ease-out;
+        transition: transform 0.2s ease-out;
     }
 
     #dock li img {
@@ -126,8 +126,9 @@
 
     /* The "bounce" or grow effect on hover */
     #dock li a:hover {
-        transform: scale(1.3); /* Makes the icon larger */
-        margin-bottom: 10px;   /* Lifts the icon as it grows */
+    /* Combine scale and vertical movement into one property */
+    transform: scale(1.3) translateY(-10px); 
+}
     }
 
     /* LIGHT/DARK MODE SUPPORT */
