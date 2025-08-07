@@ -160,10 +160,12 @@
     }
 
     /* Style each individual bookmark item */
-    #bookmarks li {
-        width: 120px; /* Sets the width of each bookmark column */
-        margin-bottom: 15px;
-    }
+   #bookmarks li {
+    width: 120px;
+    margin-bottom: 15px;
+    flex-grow: 0;     /* Add this line */
+    flex-shrink: 0;   /* Add this line */
+}
 
     /* Center the icon and text within each bookmark */
     #bookmarks a {
