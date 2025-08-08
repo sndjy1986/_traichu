@@ -5,10 +5,9 @@
 function updateTime() {
     const now = new Date();
     
-    // Format: Aug 7th, 2025
-    const month = now.toLocaleDateString('en-US', { month: });
-    const day = now.getDate();
-    const year = now.getFullYear();
+const month = now.toLocaleDateString('en-US', { month: 'long' });
+const day = now.getDate();
+const year = now.getFullYear();
     
     // Add ordinal suffix (1st, 2nd, 3rd, 4th, etc.)
     const getOrdinalSuffix = (day) => {
