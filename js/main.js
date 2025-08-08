@@ -24,7 +24,7 @@ function updateTime() {
     const dateString = `${month} ${day}${getOrdinalSuffix(day)}, ${year}`;
     
     // Format: -Thursday-
-    const weekday = `-${now.toLocaleDateString('en-US', { weekday: 'long' })}-`;
+    const weekday = `${now.toLocaleDateString('en-US', { weekday: 'long' })}`;
     
     // Format: 5:36PM
     const timeString = now.toLocaleTimeString('en-US', { 
