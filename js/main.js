@@ -6,7 +6,7 @@ function updateTime() {
     const now = new Date();
     
     // Format: Aug 7th, 2025
-    const month = now.toLocaleDateString('en-US', { month: 'short' });
+    const month = now.toLocaleDateString('en-US', { month: 'Long' });
     const day = now.getDate();
     const year = now.getFullYear();
     
