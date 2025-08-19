@@ -343,7 +343,7 @@ function loadNetworkInfo() {
     const locationInfoEl = document.getElementById('location-info');
     const asnInfoEl = document.getElementById('asn-info');
 
-    fetch('http://ip-api.com/json/?message=')
+    fetch('https://ip-api.com/json/')
         .then(response => response.json())
         .then(data => {
             if (ipInfoEl) ipInfoEl.textContent = `IP: ${data.query}`;
@@ -365,7 +365,7 @@ function runSpeedTest() {
     const speedTestEl = document.getElementById('speed-test');
     if (!speedTestEl) return;
 
-    const imageAddr = "https://raw.githubusercontent.com/sndjy1986/_traichu/refs/heads/main/mario.gif"; 
+    const imageAddr = "https://raw.githubusercontent.com/sndjy1986/_traichu/refs/heads/main/mario.gif";
     const downloadSize = 345331; //bytes
 
     let startTime, endTime;
