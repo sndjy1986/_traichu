@@ -343,15 +343,15 @@ function loadNetworkInfo() {
     const locationInfoEl = document.getElementById('location-info');
     const asnInfoEl = document.getElementById('asn-info');
     const organizationInfoEl = document.getElementById('organization-info');
+    const accessKey = '0eaf9d49b5a81ba5c4d86b455319f533'; // Your ipapi.co key
 
-    // Use ipify to get the IPv4 address first
+    // Use ipify to reliably get the IPv4 address first
     fetch('https://api.ipify.org?format=json')
         .then(response => response.json())
         .then(ipData => {
             const ipAddress = ipData.ip;
-            const accessKey = '0eaf9d49b5a81ba5c4d86b455319f533';
-
             // Now, use the fetched IPv4 address with ipapi.co
+            // Note: The key should be passed as a URL parameter for this service.
             return fetch(`https://ipapi.co/${ipAddress}/json/?key=${accessKey}`);
         })
         .then(response => response.json())
