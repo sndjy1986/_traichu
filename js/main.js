@@ -345,7 +345,7 @@ function loadNetworkInfo() {
     const organizationInfoEl = document.getElementById('organization-info');
 
     // Use a reliable service to get the IPv4 address and other info
-    fetch('https://ipinfo.io/json?token=YOUR_IPINFO_TOKEN') // Replace with your ipinfo.io token
+    fetch('https://ipinfo.io/json?') // Replace with your ipinfo.io token
         .then(response => response.json())
         .then(data => {
             if (data.error) {
