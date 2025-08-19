@@ -336,6 +336,93 @@ function loadNewsFeed() {
 }
 
 /**
+ * FETCHES AND DISPLAYS NETWORK INFORMATION
+ */
+function loadNetworkInfo() {
+    const ipInfoEl = document.getElementById('ip-info');
+    const locationInfoEl = document.getElementById('location-info');
+    const asnInfoEl = document.getElementById('asn-info');
+
+    fetch('http://ip-api.com/json/')
+        .then(response => response.json())
+        .then(data => {
+            if (ipInfoEl) ipInfoEl.textContent = `IP: ${data.query}`;
+            if (locationInfoEl) locationInfoEl.textContent = `Location: ${data.city}, ${data.regionName}`;
+            if (asnInfoEl) asnInfoEl.textContent = `ASN: ${data.as}`;
+        })
+        .catch(error => {
+            console.error('Error fetching network info:', error);
+            if (ipInfoEl) ipInfoEl.textContent = 'IP: Unavailable';
+            if (locationInfoEl) locationInfoEl.textContent = 'Location: Unavailable';
+            if (asnInfoEl) asnInfoEl.textContent = 'ASN: Unavailable';
+        });
+}
+
+/**
+ * RUNS A SIMPLE SPEED TEST
+ */
+function runSpeedTest() {
+    const speedTestEl = document.getElementById('speed-test');
+    if (!speedTestEl) return;
+
+    const imageAddr = "https://raw.githubusercontent.com/sndjy1986/_traichu/refs/heads/main/mario.gif";
+    const downloadSize = 5616998; //bytes
+
+    let startTime, endTime;
+    const download = new Image();
+
+    download.onload = function () {
+        endTime = (new Date()).getTime();
+        showResults();
+    }
+    
+    download.onerror = function (err, msg) {
+        if (speedTestEl) speedTestEl.textContent = "Speed: Invalid image, or error downloading";
+    }
+
+    startTime = (new Date()).getTime();
+    const cacheBuster = "?nnn=" + startTime;
+    download.src = imageAddr + cacheBuster;
+
+    function showResults() {
+        const duration = (endTime - startTime) / 1000;
+        const bitsLoaded = downloadSize * 8;
+        const speedBps = (bitsLoaded / duration).toFixed(2);
+        const speedKbps = (speedBps / 1024).toFixed(2);
+        const speedMbps = (speedKbps / 1024).toFixed(2);
+        if (speedTestEl) speedTestEl.textContent = `Speed: ${speedMbps} Mbps`;
+    }
+}
+
+
+/**
+ * MAIN FUNCTION TO INITIALIZE THE PAGE - MODIFIED
+ */
+function initializeApp() {
+    // Start time updates
+    updateTime();
+    setInterval(updateTime, 1000);
+    
+    // Initialize greeting
+    updateGreeting();
+    setInterval(updateGreeting, 300000); // Every 5 minutes
+    
+    // Load news feed
+    loadNewsFeed();
+    setInterval(loadNewsFeed, 900000); // Every 15 minutes
+    
+    // Initialize weather widget
+    initializeWeatherWidget();
+    
+    // Check for weather alerts
+    fetchWeatherAlert();
+    setInterval(fetchWeatherAlert, 600000); // Every 10 minutes
+
+    // Load network info and run speed test
+    loadNetworkInfo();
+    runSpeedTest();
+}
+/**
  * MAIN FUNCTION TO INITIALIZE THE PAGE
  */
 function initializeApp() {
