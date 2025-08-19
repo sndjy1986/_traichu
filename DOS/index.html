@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DOS Boot</title>
+    <style>
+        body {
+            background-color: #0000AA; /* Classic DOS blue screen */
+            color: #FFFFFF;
+            font-family: 'Perfect DOS VGA', 'Lucida Console', 'Courier New', monospace;
+            font-size: 16px;
+            overflow: hidden;
+            margin: 0;
+            padding: 20px;
+        }
+        #boot-screen {
+            white-space: pre-wrap; /* Allows text to wrap and respects whitespace */
+        }
+        .cursor {
+            background-color: #FFFFFF;
+            animation: blink 1s step-end infinite;
+        }
+        @keyframes blink {
+            50% {
+                background-color: transparent;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div id="boot-screen"></div>
+
+<script>
+    const bootScreen = document.getElementById('boot-screen');
+    const lines = [
+        { text: 'Award Modular BIOS v4.51PG, An Energy Star Ally', delay: 500 },
+        { text: 'Copyright (C) 1984-95, Award Software, Inc.\n', delay: 300 },
+        { text: 'Memory Test: ', delay: 800, isMemory: true, memoryTotal: 65536 },
+        { text: '\n\nDetecting floppy drive A: ... Found', delay: 1000 },
+        { text: 'Detecting primary master ... GENERIC IDE DISK TYPE47', delay: 1500 },
+        { text: 'Detecting primary slave ... None', delay: 500 },
+        { text: 'Detecting secondary master ... CD-ROM', delay: 500 },
+        { text: 'Detecting secondary slave ... None\n', delay: 500 },
+        { text: 'Loading MS-DOS...', delay: 1200 },
+        { text: 'Starting...', delay: 500 },
+        { text: '\nC:\\> ', delay: 200, isPrompt: true }
+    ];
+
+    let currentLine = 0;
+
+    function processBootSequence() {
+        if (currentLine >= lines.length) return;
+
+        const line = lines[currentLine];
+        setTimeout(() => {
+            if (line.isMemory) {
+                let memoryCounter = 0;
+                const memoryTotal = line.memoryTotal;
+                bootScreen.innerHTML += line.text;
+                const interval = setInterval(() => {
+                    memoryCounter += 1024;
+                    if (memoryCounter > memoryTotal) memoryCounter = memoryTotal;
+                    // \r moves the cursor to the beginning of the line
+                    bootScreen.innerHTML = bootScreen.innerHTML.replace(/\d+K OK$/, '') + `${memoryCounter}K OK`;
+                    if (memoryCounter >= memoryTotal) {
+                        clearInterval(interval);
+                        currentLine++;
+                        processBootSequence();
+                    }
+                }, 50); // Speed of memory count
+            } else if (line.isPrompt) {
+                bootScreen.innerHTML += line.text;
+                // Add blinking cursor at the end
+                const cursorSpan = document.createElement('span');
+                cursorSpan.innerHTML = '&nbsp;'; // Non-breaking space
+                cursorSpan.classList.add('cursor');
+                bootScreen.appendChild(cursorSpan);
+            } else {
+                bootScreen.innerHTML += line.text;
+                currentLine++;
+                processBootSequence();
+            }
+        }, line.delay);
+    }
+
+    // Start the boot sequence
+    processBootSequence();
+</script>
+
+</body>
+</html>
