@@ -343,7 +343,7 @@ function loadNetworkInfo() {
     const locationInfoEl = document.getElementById('location-info');
     const asnInfoEl = document.getElementById('asn-info');
 
-    fetch('http://ip-api.com/json/?message=')
+    fetch('http://ip-api.com/json/')
         .then(response => response.json())
         .then(data => {
             if (ipInfoEl) ipInfoEl.textContent = `IP: ${data.query}`;
@@ -365,8 +365,8 @@ function runSpeedTest() {
     const speedTestEl = document.getElementById('speed-test');
     if (!speedTestEl) return;
 
-    const imageAddr = "https://raw.githubusercontent.com/sndjy1986/_traichu/refs/heads/main/mario.gif";
-    const downloadSize = 5616998; //bytes
+    const imageAddr = "https://raw.githubusercontent.com/sndjy1986/_traichu/refs/heads/main/mario.gif"; 
+    const downloadSize = 345331; //bytes
 
     let startTime, endTime;
     const download = new Image();
@@ -396,7 +396,7 @@ function runSpeedTest() {
 
 
 /**
- * MAIN FUNCTION TO INITIALIZE THE PAGE - MODIFIED
+ * MAIN FUNCTION TO INITIALIZE THE PAGE
  */
 function initializeApp() {
     // Start time updates
@@ -421,29 +421,6 @@ function initializeApp() {
     // Load network info and run speed test
     loadNetworkInfo();
     runSpeedTest();
-}
-/**
- * MAIN FUNCTION TO INITIALIZE THE PAGE
- */
-function initializeApp() {
-    // Start time updates
-    updateTime();
-    setInterval(updateTime, 1000);
-    
-    // Initialize greeting
-    updateGreeting();
-    setInterval(updateGreeting, 300000); // Every 5 minutes
-    
-    // Load news feed
-    loadNewsFeed();
-    setInterval(loadNewsFeed, 900000); // Every 15 minutes
-    
-    // Initialize weather widget
-    initializeWeatherWidget();
-    
-    // Check for weather alerts
-    fetchWeatherAlert();
-    setInterval(fetchWeatherAlert, 600000); // Every 10 minutes
 }
 
 // Wait for HTML to be loaded, then run the app
