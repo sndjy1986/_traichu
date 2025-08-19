@@ -10,25 +10,15 @@
     <link rel="stylesheet" href="css/main.css">
     <title>Joey's Homepage</title>
 
-	</section>
-            <footer id="network-info">
-                <div id="ip-info">IP: ...</div>
-                <div id="location-info">Location: ...</div>
-                <div id="asn-info">ASN: ...</div>
-                <div id="speed-test">Speed: ...</div>
-            </footer>
-        </section>
-    </main>
-	
 <style>
-    body { 
+    body {
         margin: 0;
         padding-top: 50px;
         transition: padding-top 0.3s ease;
     }
-    
+
     body.alert-active {
-        padding-top: 105px; 
+        padding-top: 105px;
     }
 
     #weather-alert {
@@ -40,17 +30,17 @@
         font-size: 18px;
         font-weight: lighter;
         position: fixed;
-        top: 0; 
+        top: 0;
         width: 100%;
         z-index: 10000;
         border-bottom: 2px solid #a94442;
-        height: 55px; 
-        box-sizing: border-box; 
+        height: 55px;
+        box-sizing: border-box;
     }
 
     #news-ticker {
         position: fixed;
-        top: 0; 
+        top: 0;
         left: 0;
         width: 100%;
         height: 50px;
@@ -61,11 +51,11 @@
         border-bottom: 2px solid #333;
         transition: top 0.3s ease;
     }
-    
+
     body.alert-active #news-ticker {
-        top: 55px; 
+        top: 55px;
     }
-    
+
     #news-content {
         position: absolute;
         white-space: nowrap;
@@ -78,31 +68,31 @@
         animation-iteration-count: infinite;
         will-change: transform;
     }
-    
+
     @keyframes scroll-left {
         0% {
             transform: translateX(100vw);
         }
         100% {
-            transform: translateX(-100%); 
+            transform: translateX(-100%);
         }
     }
-    
+
     #news-content a {
         color: #fff;
         text-decoration: none;
         margin-right: 80px;
     }
-    
+
     #news-content a:hover {
         text-decoration: underline;
     }
-    
+
     main {
         position: relative !important;
         top: 10px !important;
     }
-    
+
 
     #weather {
         position: fixed;
@@ -227,21 +217,21 @@
         color: var(--text-color);
         margin: -13px 0;
     }
-    
+
     #dock {
         margin-top: -10px;
     }
-    
+
     #dock ul {
         list-style: none;
         padding: 0;
         margin: 0;
         display: flex;
         justify-content: space-evenly;
-        align-items: flex-end; 
+        align-items: flex-end;
         height: 28px;
     }
-    
+
     #dock li {
         margin: 0 5px;
     }
@@ -252,20 +242,20 @@
     }
 
     #dock li img {
-        width: 48px;  
-        height: 48px; 
+        width: 48px;
+        height: 48px;
         vertical-align: middle;
     }
 
     #dock li a:hover {
-        transform: scale(1.3) translateY(-10px); 
+        transform: scale(1.3) translateY(-10px);
     }
 
     :root {
         --text-color: #333;
         --link-color: #0066cc;
     }
-    
+
     @media (prefers-color-scheme: dark) {
         :root {
             --text-color: #ffffff;
@@ -273,7 +263,7 @@
         }
     }
 
- 
+
     #bookmarks {
         margin-top: 3px;
     }
@@ -281,16 +271,16 @@
 
     #bookmarks ul {
         display: flex;
-        justify-content: space-around; 
+        justify-content: space-around;
         align-items: center;
-        padding: 0 5px; 
-        margin: 0 auto 10px; 
+        padding: 0 5px;
+        margin: 0 auto 10px;
         list-style: none;
     }
 
 
     #bookmarks a {
-        display: inline-flex; 
+        display: inline-flex;
         align-items: center;
         text-decoration: none;
         font-size: 14px;
@@ -304,9 +294,20 @@
 
 
     .favicon {
-        width: 20px;  
+        width: 20px;
         height: 20px;
-        margin-right: 8px; 
+        margin-right: 8px;
+    }
+    #network-info {
+        position: fixed;
+        bottom: 0;
+        width: 100%;
+        display: flex;
+        justify-content: space-around;
+        padding: 10px;
+        background: rgba(0,0,0,0.5);
+        color: white;
+        font-size: 14px;
     }
 
 </style>
@@ -336,7 +337,7 @@
                     <span id="current-temp">Loading...</span>
                     <span id="current-location">Anderson, SC</span>
                 </div>
-                
+
                 <div id="forecast-panel">
                     <div id="forecast-days">
 
@@ -349,7 +350,7 @@
             <aside>
                 <img src="https://raw.githubusercontent.com/sndjy1986/_traichu/refs/heads/main/mario.gif" alt="Mario GIF" style="width: 360px; height: 240px;">
             </aside>
-            
+
             <h2 id="greeting"></h2>
 
             <nav id="dock">
@@ -365,7 +366,7 @@
                     <li><a href="calendar.html" target="_blank" title="Calendar"><img src="https://upload.wikimedia.org/wikipedia/commons/a/a5/Google_Calendar_icon_%282020%29.svg" alt="Calendar"></a></li>
                 </ul>
             </nav>
-            
+
             <section id="search">
                 <h2 class="sr-only">Search</h2>
                 <form action="https://www.google.com/search" method="get" target="_blank">
@@ -414,7 +415,12 @@
             </section>
         </section>
     </main>
-    
+    <footer id="network-info">
+        <div id="ip-info">IP: ...</div>
+        <div id="location-info">Location: ...</div>
+        <div id="asn-info">ASN: ...</div>
+        <div id="speed-test">Speed: ...</div>
+    </footer>
 <script>
 	//moved all widgets to load in main.js
 </script>
