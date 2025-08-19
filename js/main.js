@@ -343,7 +343,7 @@ function loadNetworkInfo() {
     const locationInfoEl = document.getElementById('location-info');
     const asnInfoEl = document.getElementById('asn-info');
 
-    fetch('https://ip-api.com/json/')
+    fetch('http://ip-api.com/json/')
         .then(response => response.json())
         .then(data => {
             if (ipInfoEl) ipInfoEl.textContent = `IP: ${data.query}`;
