@@ -4,11 +4,11 @@
  */
 function updateTime() {
     const now = new Date();
-
-    const month = now.toLocaleDateString('en-US', { month: 'long' });
-    const day = now.getDate();
-    const year = now.getFullYear();
-
+    
+const month = now.toLocaleDateString('en-US', { month: 'long' });
+const day = now.getDate();
+const year = now.getFullYear();
+    
     // Add ordinal suffix (1st, 2nd, 3rd, 4th, etc.)
     const getOrdinalSuffix = (day) => {
         if (day > 3 && day < 21) return 'th';
@@ -19,27 +19,27 @@ function updateTime() {
             default: return 'th';
         }
     };
-
+    
     const dateString = `${month} ${day}${getOrdinalSuffix(day)}, ${year}`;
-
+    
     // Format: -Thursday-
     const weekday = `${now.toLocaleDateString('en-US', { weekday: 'long' })}`;
-
+    
     // Format: 5:36PM
-    const timeString = now.toLocaleTimeString('en-US', {
-        hour: 'numeric',
+    const timeString = now.toLocaleTimeString('en-US', { 
+        hour: 'numeric', 
         minute: '2-digit',
-        hour12: true
+        hour12: true 
     }).replace(' ', ''); // Remove space between time and AM/PM
-
+    
     // Update the HTML elements
     const timeDisplay = document.getElementById('time-display');
     const dateDisplay = document.getElementById('date-display');
-
+    
     if (timeDisplay) {
         timeDisplay.innerHTML = `${dateString}<br>${weekday}<br>${timeString}`;
     }
-
+    
     // Hide the date display since we're showing everything in time-display
     if (dateDisplay) {
         dateDisplay.style.display = 'none';
@@ -59,7 +59,7 @@ const WEATHER_CONFIG = {
  */
 async function loadWeatherData() {
     const cacheKey = 'weatherDataCache';
-
+    
     try {
         // Check cache first
         const cachedData = localStorage.getItem(cacheKey);
@@ -73,7 +73,7 @@ async function loadWeatherData() {
         }
 
         console.log('Fetching fresh weather data...');
-
+        
         // Fetch current weather and 5-day forecast
         const [currentResponse, forecastResponse] = await Promise.all([
             fetch(`https://api.openweathermap.org/data/2.5/weather?lat=${WEATHER_CONFIG.LAT}&lon=${WEATHER_CONFIG.LON}&appid=${WEATHER_CONFIG.API_KEY}&units=imperial`),
@@ -89,7 +89,7 @@ async function loadWeatherData() {
 
         // Process the data
         const weatherData = processWeatherData(currentData, forecastData);
-
+        
         // Cache the data
         localStorage.setItem(cacheKey, JSON.stringify({
             data: weatherData,
@@ -101,12 +101,12 @@ async function loadWeatherData() {
 
     } catch (error) {
         console.error('Error loading weather data:', error);
-
+        
         // Show fallback display
         const tempEl = document.getElementById('current-temp');
         const iconEl = document.getElementById('weather-icon');
         const locationEl = document.getElementById('current-location');
-
+        
         if (tempEl) tempEl.textContent = 'Weather unavailable';
         if (iconEl) iconEl.src = 'https://openweathermap.org/img/w/01d.png';
         if (locationEl) locationEl.textContent = 'Anderson, SC';
@@ -128,24 +128,24 @@ function processWeatherData(currentData, forecastData) {
     // Process 5-day forecast (API returns 3-hour intervals)
     const dailyForecasts = [];
     const processedDays = new Set();
-
+    
     forecastData.list.forEach(item => {
         const date = new Date(item.dt * 1000);
         const dayKey = date.toDateString();
-
+        
         // Skip if we already processed this day or if it's more than 5 days out
         if (processedDays.has(dayKey) || dailyForecasts.length >= 5) {
             return;
         }
-
+        
         // Use noon forecast for daily temps (closest to 12:00 PM)
         const hour = date.getHours();
         if (hour >= 11 && hour <= 14) {
             processedDays.add(dayKey);
-
-            const dayName = dailyForecasts.length === 0 ? 'Today' :
+            
+            const dayName = dailyForecasts.length === 0 ? 'Today' : 
                            date.toLocaleDateString('en-US', { weekday: 'short' });
-
+            
             dailyForecasts.push({
                 day: dayName,
                 icon: item.weather[0].icon,
@@ -160,9 +160,9 @@ function processWeatherData(currentData, forecastData) {
     while (dailyForecasts.length < 5 && forecastData.list.length > dailyForecasts.length * 8) {
         const item = forecastData.list[dailyForecasts.length * 8];
         const date = new Date(item.dt * 1000);
-        const dayName = dailyForecasts.length === 0 ? 'Today' :
+        const dayName = dailyForecasts.length === 0 ? 'Today' : 
                        date.toLocaleDateString('en-US', { weekday: 'short' });
-
+        
         dailyForecasts.push({
             day: dayName,
             icon: item.weather[0].icon,
@@ -186,7 +186,7 @@ function updateWeatherDisplay(weatherData) {
     const tempEl = document.getElementById('current-temp');
     const iconEl = document.getElementById('weather-icon');
     const locationEl = document.getElementById('current-location');
-
+    
     if (tempEl) tempEl.textContent = `${weatherData.current.temp}°F`;
     if (iconEl) {
         iconEl.src = `https://openweathermap.org/img/w/${weatherData.current.icon}.png`;
@@ -263,9 +263,9 @@ function fetchWeatherAlert() {
 function updateGreeting() {
     const greetingEl = document.getElementById('greeting');
     if (!greetingEl) return;
-
+    
     const hour = new Date().getHours();
-
+    
     const morningGreetings = ["Good morning, Joey!", "Rise and shine, Joey!", "Top of the morning, Joey!"];
     const afternoonGreetings = ["Good afternoon, Joey!", "Hope you're having a great day, Joey!", "How's it going, Joey?"];
     const eveningGreetings = ["Good evening, Joey!", "Hope you had a good day, Joey.", "Welcome back, Joey."];
@@ -293,23 +293,23 @@ function updateGreeting() {
 function loadNewsFeed() {
     const newsContent = document.getElementById('news-content');
     if (!newsContent) return;
-
+    
     const cacheKey = 'foxNewsFeedCache';
-    const cacheDuration = 15 * 60 * 1000;
+    const cacheDuration = 15 * 60 * 1000; 
 
     const cachedData = localStorage.getItem(cacheKey);
     if (cachedData) {
         const { html, timestamp } = JSON.parse(cachedData);
-
+        
         if (Date.now() - timestamp < cacheDuration) {
             console.log('Loading news instantly from cache.');
             newsContent.innerHTML = html;
-            return;
+            return; 
         }
     }
 
     console.log('Fetching fresh news from the server.');
-
+    
     // Try alternative RSS proxy service
     fetch('https://api.rss2json.com/v1/api.json?rss_url=' + encodeURIComponent('https://moxie.foxnews.com/google-publisher/latest.xml'))
     .then(response => response.json())
@@ -326,7 +326,7 @@ function loadNewsFeed() {
         newsContent.innerHTML = html;
         const dataToCache = { html: html, timestamp: Date.now() };
         localStorage.setItem(cacheKey, JSON.stringify(dataToCache));
-
+        
         console.log('Headlines loaded and cached successfully!');
     })
     .catch(error => {
@@ -347,15 +347,21 @@ function loadNetworkInfo() {
     fetch(`https://ipapi.co/json/?key=${accessKey}`)
         .then(response => response.json())
         .then(data => {
+            // Check for an error from the API
+            if (data.error) {
+                throw new Error(data.reason);
+            }
+            
+            // If no error, display the data
             if (ipInfoEl) ipInfoEl.textContent = `IP: ${data.ip}`;
             if (locationInfoEl) locationInfoEl.textContent = `Location: ${data.city}, ${data.region}`;
             if (asnInfoEl) asnInfoEl.textContent = `ASN: ${data.asn} (${data.org})`;
         })
         .catch(error => {
             console.error('Error fetching network info:', error);
-            if (ipInfoEl) ipInfoEl.textContent = 'IP: Unavailable';
-            if (locationInfoEl) locationInfoEl.textContent = 'Location: Unavailable';
-            if (asnInfoEl) asnInfoEl.textContent = 'ASN: Unavailable';
+            if (ipInfoEl) ipInfoEl.textContent = 'IP: API Error';
+            if (locationInfoEl) locationInfoEl.textContent = 'Location: API Error';
+            if (asnInfoEl) asnInfoEl.textContent = 'ASN: API Error';
         });
 }
 
@@ -367,7 +373,7 @@ function runSpeedTest() {
     const speedTestEl = document.getElementById('speed-test');
     if (!speedTestEl) return;
 
-    const imageAddr = "https://raw.githubusercontent.com/sndjy1986/_traichu/refs/heads/main/mario.gif" + "?n=" + Math.random();
+    const imageAddr = "https://raw.githubusercontent.com/sndjy1986/_traichu/refs/heads/main/mario.gif"; 
     const downloadSize = 345331; //bytes
 
     let startTime, endTime;
@@ -379,17 +385,18 @@ function runSpeedTest() {
     }
     
     download.onerror = function (err, msg) {
-        if (speedTestEl) speedTestEl.textContent = "Speed: Test failed";
+        if (speedTestEl) speedTestEl.textContent = "Speed: Invalid image, or error downloading";
     }
 
     startTime = (new Date()).getTime();
-    download.src = imageAddr;
+    const cacheBuster = "?nnn=" + startTime;
+    download.src = imageAddr + cacheBuster;
 
     function showResults() {
         const duration = (endTime - startTime) / 1000;
         const bitsLoaded = downloadSize * 8;
-        const speedBps = (bitsLoaded / duration);
-        const speedKbps = (speedBps / 1024);
+        const speedBps = (bitsLoaded / duration).toFixed(2);
+        const speedKbps = (speedBps / 1024).toFixed(2);
         const speedMbps = (speedKbps / 1024).toFixed(2);
         if (speedTestEl) speedTestEl.textContent = `Speed: ${speedMbps} Mbps`;
     }
