@@ -342,19 +342,17 @@ function loadNetworkInfo() {
     const ipInfoEl = document.getElementById('ip-info');
     const locationInfoEl = document.getElementById('location-info');
     const asnInfoEl = document.getElementById('asn-info');
-    const accessKey = '0eaf9d49b5a81ba5c4d86b455319f533';
 
-    fetch(`https://ipapi.co/json/?key=${accessKey}`)
+    // NOTE: The free version of ipapi.co does not require an API key in the URL.
+    // It is based on the IP address making the request.
+    fetch('https://ipapi.co/json/')
         .then(response => response.json())
         .then(data => {
-            // Check for an error from the API
             if (data.error) {
                 throw new Error(data.reason);
             }
-            
-            // If no error, display the data
             if (ipInfoEl) ipInfoEl.textContent = `IP: ${data.ip}`;
-            if (locationInfoEl) locationInfoEl.textContent = `Location: ${data.city}, ${data.region}`;
+            if (locationInfoEl) locationInfoEl.textContent = `Location: ${data.city}, ${data.region_code}`;
             if (asnInfoEl) asnInfoEl.textContent = `ASN: ${data.asn} (${data.org})`;
         })
         .catch(error => {
@@ -373,8 +371,8 @@ function runSpeedTest() {
     const speedTestEl = document.getElementById('speed-test');
     if (!speedTestEl) return;
 
-    const imageAddr = "https://raw.githubusercontent.com/sndjy1986/_traichu/refs/heads/main/mario.gif"; 
-    const downloadSize = 345331; //bytes
+    const imageAddr = "https://raw.githubusercontent.com/sndjy1986/_traichu/refs/heads/main/mario.gif" + "?n=" + Math.random();
+    const downloadSize = 345331; // Corrected size in bytes for mario.gif
 
     let startTime, endTime;
     const download = new Image();
@@ -385,18 +383,17 @@ function runSpeedTest() {
     }
     
     download.onerror = function (err, msg) {
-        if (speedTestEl) speedTestEl.textContent = "Speed: Invalid image, or error downloading";
+        if (speedTestEl) speedTestEl.textContent = "Speed: Test failed";
     }
 
     startTime = (new Date()).getTime();
-    const cacheBuster = "?nnn=" + startTime;
-    download.src = imageAddr + cacheBuster;
+    download.src = imageAddr;
 
     function showResults() {
         const duration = (endTime - startTime) / 1000;
         const bitsLoaded = downloadSize * 8;
-        const speedBps = (bitsLoaded / duration).toFixed(2);
-        const speedKbps = (speedBps / 1024).toFixed(2);
+        const speedBps = (bitsLoaded / duration);
+        const speedKbps = (speedBps / 1024);
         const speedMbps = (speedKbps / 1024).toFixed(2);
         if (speedTestEl) speedTestEl.textContent = `Speed: ${speedMbps} Mbps`;
     }
