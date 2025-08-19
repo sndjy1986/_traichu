@@ -343,26 +343,24 @@ function loadNetworkInfo() {
     const locationInfoEl = document.getElementById('location-info');
     const asnInfoEl = document.getElementById('asn-info');
     const organizationInfoEl = document.getElementById('organization-info');
-    const accessKey = '0eaf9d49b5a81ba5c4d86b455319f533'; // Your ipapi.co key
 
-    // Use ipify to reliably get the IPv4 address first
-    fetch('https://api.ipify.org?format=json')
-        .then(response => response.json())
-        .then(ipData => {
-            const ipAddress = ipData.ip;
-            // Now, use the fetched IPv4 address with ipapi.co
-            // Note: The key should be passed as a URL parameter for this service.
-            return fetch(`https://ipapi.co/${ipAddress}/json/?key=${accessKey}`);
-        })
+    // Use a reliable service to get the IPv4 address and other info
+    fetch('https://ipinfo.io/json?token=YOUR_IPINFO_TOKEN') // Replace with your ipinfo.io token
         .then(response => response.json())
         .then(data => {
             if (data.error) {
-                throw new Error(data.reason);
+                throw new Error(data.error.message);
             }
             if (ipInfoEl) ipInfoEl.textContent = `IP: ${data.ip}`;
-            if (locationInfoEl) locationInfoEl.textContent = `Location: ${data.city}, ${data.region_code}`;
-            if (asnInfoEl) asnInfoEl.textContent = `ASN: ${data.asn}`;
-            if (organizationInfoEl) organizationInfoEl.textContent = `Organization: ${data.org}`;
+            if (locationInfoEl) locationInfoEl.textContent = `Location: ${data.city}, ${data.region}`;
+            if (asnInfoEl) {
+                // The 'org' field from ipinfo.io contains both ASN and organization name
+                const orgParts = data.org.split(' ');
+                const asn = orgParts.shift(); // The first part is the ASN
+                const orgName = orgParts.join(' '); // The rest is the organization name
+                asnInfoEl.textContent = `ASN: ${asn}`;
+                if (organizationInfoEl) organizationInfoEl.textContent = `Organization: ${orgName}`;
+            }
         })
         .catch(error => {
             console.error('Error fetching network info:', error);
