@@ -5,6 +5,15 @@ body {
     font-size: var(--font-size-body);
 }
 
+#network-info {
+    display: flex;
+    justify-content: space-around;
+    width: 100%;
+    padding: var(--spacing-m);
+    font-size: 0.8rem;
+    color: var(--primary-link-color);
+}
+
 main {
     align-items: center;
     display: flex;
