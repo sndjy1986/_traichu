@@ -311,7 +311,7 @@ function loadNewsFeed() {
     console.log('Fetching fresh news from the server.');
     
     // Try alternative RSS proxy service
-    fetch('https://api.rss2json.com/v1/api.json?rss_url=' + encodeURIComponent('https://moxie.foxnews.com/google-publisher/latest.xml'))
+    fetch('http://api.rss2json.com/v1/api.json?rss_url=' + encodeURIComponent('https://moxie.foxnews.com/google-publisher/latest.xml'))
     .then(response => response.json())
     .then(data => {
         let html = '';
