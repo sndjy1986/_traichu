@@ -372,7 +372,7 @@ function loadNetworkInfo() {
 }
 
 /**
- * IMPROVED SPEED TEST FOR FIBER CONNECTIONS
+ * IMPROVED SPEED TEST WITH MULTIPLE FALLBACKS
  */
 function runSpeedTest() {
     const speedTestEl = document.getElementById('speed-test');
@@ -380,8 +380,23 @@ function runSpeedTest() {
 
     speedTestEl.textContent = 'Speed: Testing...';
 
-    // Use a larger file size for fiber connections
-    const testUrl = 'https://speed.cloudflare.com/__down?bytes=25000000'; // 25MB
+    // Try multiple test URLs in order
+    const testUrls = [
+        'https://httpbin.org/bytes/10485760', // 10MB from httpbin
+        'https://www.google.com/images/branding/googlelogo/2x/googlelogo_color_272x92dp.png?cache=' + Date.now(), // Google image with cache buster
+        'https://raw.githubusercontent.com/sndjy1986/_traichu/refs/heads/main/mario.gif?cache=' + Date.now() // Your mario.gif with cache buster
+    ];
+
+    trySpeedTest(testUrls, 0, speedTestEl);
+}
+
+function trySpeedTest(urls, index, speedTestEl) {
+    if (index >= urls.length) {
+        speedTestEl.textContent = 'Speed: All tests failed';
+        return;
+    }
+
+    const testUrl = urls[index];
     const startTime = performance.now();
     
     fetch(testUrl, {
@@ -398,25 +413,33 @@ function runSpeedTest() {
     .then(data => {
         const endTime = performance.now();
         const bytes = data.byteLength;
-        const duration = (endTime - startTime) / 1000; // Convert to seconds
+        const duration = (endTime - startTime) / 1000;
         
-        // Proper conversion: bytes → bits → megabits
+        // Skip if test was too fast (less than 0.1 seconds)
+        if (duration < 0.1) {
+            console.log(`Test ${index + 1} too fast (${duration.toFixed(3)}s), trying next...`);
+            trySpeedTest(urls, index + 1, speedTestEl);
+            return;
+        }
+        
+        // Calculate speed
         const bytesPerSecond = bytes / duration;
         const bitsPerSecond = bytesPerSecond * 8;
         const mbps = Math.round(bitsPerSecond / 1000000);
         
         speedTestEl.textContent = `Speed: ${mbps} Mbps`;
         
-        // Debug info
-        console.log(`Speed test results:
+        console.log(`Speed test ${index + 1} results:
+        - URL: ${testUrl}
         - Downloaded: ${(bytes / 1024 / 1024).toFixed(1)} MB
         - Duration: ${duration.toFixed(2)} seconds  
         - Speed: ${(bytesPerSecond / 1024 / 1024).toFixed(1)} MB/s
         - Speed: ${mbps} Mbps`);
     })
     .catch(error => {
-        console.error('Speed test failed:', error);
-        speedTestEl.textContent = 'Speed: Test failed';
+        console.error(`Speed test ${index + 1} failed:`, error);
+        // Try next URL
+        trySpeedTest(urls, index + 1, speedTestEl);
     });
 }
 
