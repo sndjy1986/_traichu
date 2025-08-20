@@ -371,6 +371,10 @@ function loadNetworkInfo() {
         });
 }
 
+/**
+ * IMPROVED SPEED TEST FOR HIGH-SPEED CONNECTIONS
+ * This version can accurately measure fiber speeds >1Gbps
+ */
 
 class FiberSpeedTest {
     constructor() {
@@ -555,8 +559,8 @@ function runSpeedTest() {
 
     speedTestEl.textContent = 'Speed: Testing...';
 
-    // Use Cloudflare's speed test for better accuracy on fiber
-    const testUrl = 'https://speed.cloudflare.com/__down?bytes=10000000'; // 10MB test
+    // Use a larger test file for fiber connections
+    const testUrl = 'https://speed.cloudflare.com/__down?bytes=50000000'; // 50MB test
     const startTime = performance.now();
     
     fetch(testUrl, {
@@ -574,10 +578,19 @@ function runSpeedTest() {
         const endTime = performance.now();
         const bytes = data.byteLength;
         const duration = (endTime - startTime) / 1000; // Convert to seconds
-        const bitsPerSecond = bytes * 8 / duration;
-        const mbps = (bitsPerSecond / 1000000).toFixed(1); // Convert to Mbps
+        
+        // Proper conversion: bytes per second → bits per second → megabits per second
+        const bytesPerSecond = bytes / duration;
+        const bitsPerSecond = bytesPerSecond * 8;
+        const mbps = Math.round(bitsPerSecond / 1000000); // Convert to Mbps and round
         
         speedTestEl.textContent = `Speed: ${mbps} Mbps`;
+        
+        console.log(`Speed test results:
+        - Downloaded: ${(bytes / 1024 / 1024).toFixed(1)} MB
+        - Duration: ${duration.toFixed(2)} seconds  
+        - Speed: ${(bytesPerSecond / 1024 / 1024).toFixed(1)} MB/s
+        - Speed: ${mbps} Mbps`);
     })
     .catch(error => {
         console.error('Speed test failed:', error);
@@ -592,11 +605,14 @@ function runConcurrentSpeedTest() {
     const speedTestEl = document.getElementById('speed-test');
     if (!speedTestEl) return;
 
+    speedTestEl.textContent = 'Speed: Testing (fallback)...';
+
+    // Use multiple larger files concurrently
     const testUrls = [
-        'https://httpbin.org/bytes/2097152?t1=' + Date.now(), // 2MB
-        'https://httpbin.org/bytes/2097152?t2=' + Date.now(), // 2MB  
-        'https://httpbin.org/bytes/2097152?t3=' + Date.now(), // 2MB
-        'https://httpbin.org/bytes/2097152?t4=' + Date.now()  // 2MB
+        'https://httpbin.org/bytes/5242880?t1=' + Date.now(), // 5MB
+        'https://httpbin.org/bytes/5242880?t2=' + Date.now(), // 5MB  
+        'https://httpbin.org/bytes/5242880?t3=' + Date.now(), // 5MB
+        'https://httpbin.org/bytes/5242880?t4=' + Date.now()  // 5MB
     ];
 
     const startTime = performance.now();
@@ -608,10 +624,18 @@ function runConcurrentSpeedTest() {
         const endTime = performance.now();
         const totalBytes = results.reduce((sum, data) => sum + data.byteLength, 0);
         const duration = (endTime - startTime) / 1000;
-        const bitsPerSecond = totalBytes * 8 / duration;
-        const mbps = (bitsPerSecond / 1000000).toFixed(1);
+        
+        const bytesPerSecond = totalBytes / duration;
+        const bitsPerSecond = bytesPerSecond * 8;
+        const mbps = Math.round(bitsPerSecond / 1000000);
         
         speedTestEl.textContent = `Speed: ${mbps} Mbps`;
+        
+        console.log(`Concurrent speed test results:
+        - Downloaded: ${(totalBytes / 1024 / 1024).toFixed(1)} MB total
+        - Duration: ${duration.toFixed(2)} seconds  
+        - Speed: ${(bytesPerSecond / 1024 / 1024).toFixed(1)} MB/s
+        - Speed: ${mbps} Mbps`);
     })
     .catch(error => {
         console.error('Concurrent speed test failed:', error);
@@ -687,11 +711,6 @@ class WebRTCSpeedTest {
         return totalBytes / duration; // Bytes per second
     }
 }
-
-
-/**
- * MAIN FUNCTION TO INITIALIZE THE PAGE
- */
 function initializeApp() {
     // Start time updates
     updateTime();
