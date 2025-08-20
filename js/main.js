@@ -371,91 +371,25 @@ function loadNetworkInfo() {
         });
 }
 
-// SIMPLE FAST.COM SPEED TEST - Replace your existing runSpeedTest function
+/**
+ * IMPROVED SPEED TEST FOR FIBER CONNECTIONS
+ */
 function runSpeedTest() {
     const speedTestEl = document.getElementById('speed-test');
     if (!speedTestEl) return;
 
     speedTestEl.textContent = 'Speed: Testing...';
 
-    // Use Fast.com's token system (this is how their API works)
-    getFastComToken()
-        .then(token => runFastComSpeedTest(token))
-        .catch(error => {
-            console.error('Fast.com speed test failed:', error);
-            // Simple fallback
-            runSimpleFallbackTest();
-        });
-}
-
-async function getFastComToken() {
-    const response = await fetch('https://fast.com/');
-    const html = await response.text();
-    
-    // Extract the token from Fast.com's script
-    const tokenMatch = html.match(/token:"([^"]+)"/);
-    if (!tokenMatch) {
-        throw new Error('Could not extract Fast.com token');
-    }
-    
-    return tokenMatch[1];
-}
-
-async function runFastComSpeedTest(token) {
-    const speedTestEl = document.getElementById('speed-test');
-    
-    try {
-        // Get Fast.com's test URLs
-        const urlResponse = await fetch(`https://api.fast.com/netflix/speedtest/v2?https=true&token=${token}&urlCount=3`);
-        const urlData = await urlResponse.json();
-        
-        if (!urlData || urlData.length === 0) {
-            throw new Error('No test URLs received');
-        }
-        
-        // Run the actual speed test
-        const testUrl = urlData[0].url;
-        const startTime = performance.now();
-        
-        const response = await fetch(testUrl, {
-            cache: 'no-cache',
-            headers: { 'Cache-Control': 'no-cache' }
-        });
-        
-        if (!response.ok) {
-            throw new Error(`HTTP ${response.status}`);
-        }
-        
-        const data = await response.arrayBuffer();
-        const endTime = performance.now();
-        
-        // Calculate speed
-        const bytes = data.byteLength;
-        const duration = (endTime - startTime) / 1000; // seconds
-        const bitsPerSecond = (bytes * 8) / duration;
-        const mbps = Math.round(bitsPerSecond / 1000000);
-        
-        speedTestEl.textContent = `Speed: ${mbps} Mbps`;
-        
-    } catch (error) {
-        console.error('Fast.com test execution failed:', error);
-        runSimpleFallbackTest();
-    }
-}
-
-// Simple fallback if Fast.com doesn't work
-function runSimpleFallbackTest() {
-    const speedTestEl = document.getElementById('speed-test');
-    
-    speedTestEl.textContent = 'Speed: Testing (fallback)...';
-    
-    // Use a reliable CDN with a large file
+    // Use a larger file size for fiber connections
     const testUrl = 'https://speed.cloudflare.com/__down?bytes=25000000'; // 25MB
     const startTime = performance.now();
     
     fetch(testUrl, {
         cache: 'no-cache',
-        headers: { 'Cache-Control': 'no-cache' }
+        headers: { 
+            'Cache-Control': 'no-cache',
+            'Pragma': 'no-cache'
+        }
     })
     .then(response => {
         if (!response.ok) throw new Error(`HTTP ${response.status}`);
@@ -464,17 +398,31 @@ function runSimpleFallbackTest() {
     .then(data => {
         const endTime = performance.now();
         const bytes = data.byteLength;
-        const duration = (endTime - startTime) / 1000;
+        const duration = (endTime - startTime) / 1000; // Convert to seconds
         
-        const bitsPerSecond = (bytes * 8) / duration;
+        // Proper conversion: bytes → bits → megabits
+        const bytesPerSecond = bytes / duration;
+        const bitsPerSecond = bytesPerSecond * 8;
         const mbps = Math.round(bitsPerSecond / 1000000);
         
         speedTestEl.textContent = `Speed: ${mbps} Mbps`;
+        
+        // Debug info
+        console.log(`Speed test results:
+        - Downloaded: ${(bytes / 1024 / 1024).toFixed(1)} MB
+        - Duration: ${duration.toFixed(2)} seconds  
+        - Speed: ${(bytesPerSecond / 1024 / 1024).toFixed(1)} MB/s
+        - Speed: ${mbps} Mbps`);
     })
     .catch(error => {
-        console.error('Fallback speed test failed:', error);
-        speedTestEl.textContent = 'Speed: Test unavailable';
+        console.error('Speed test failed:', error);
+        speedTestEl.textContent = 'Speed: Test failed';
     });
+}
+
+/**
+ * MAIN FUNCTION TO INITIALIZE THE PAGE
+ */
 function initializeApp() {
     // Start time updates
     updateTime();
