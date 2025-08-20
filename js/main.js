@@ -371,204 +371,91 @@ function loadNetworkInfo() {
         });
 }
 
-/**
- * IMPROVED SPEED TEST FOR HIGH-SPEED CONNECTIONS
- * This version can accurately measure fiber speeds >1Gbps
- */
-
-class FiberSpeedTest {
-    constructor() {
-        this.testSizes = [
-            { name: '1MB', size: 1024 * 1024, url: 'https://httpbin.org/bytes/1048576' },
-            { name: '5MB', size: 5 * 1024 * 1024, url: 'https://httpbin.org/bytes/5242880' },
-            { name: '10MB', size: 10 * 1024 * 1024, url: 'https://httpbin.org/bytes/10485760' }
-        ];
-        this.concurrentConnections = 4; // Multiple streams for better measurement
-        this.testDuration = 10000; // 10 seconds max per test
-    }
-
-    async runSpeedTest() {
-        const speedTestEl = document.getElementById('speed-test');
-        if (!speedTestEl) return;
-
-        speedTestEl.textContent = 'Speed: Testing...';
-        
-        try {
-            // Run download test with multiple concurrent connections
-            const downloadSpeed = await this.measureDownloadSpeed();
-            
-            // Run upload test
-            const uploadSpeed = await this.measureUploadSpeed();
-            
-            // Display results
-            const downloadMbps = (downloadSpeed / 1024 / 1024 * 8).toFixed(1);
-            const uploadMbps = (uploadSpeed / 1024 / 1024 * 8).toFixed(1);
-            
-            speedTestEl.innerHTML = `Speed: ↓${downloadMbps} Mbps ↑${uploadMbps} Mbps`;
-            
-        } catch (error) {
-            console.error('Speed test failed:', error);
-            speedTestEl.textContent = 'Speed: Test failed';
-        }
-    }
-
-    async measureDownloadSpeed() {
-        const testFile = this.testSizes[1]; // Use 5MB file
-        const promises = [];
-        
-        // Create multiple concurrent download streams
-        for (let i = 0; i < this.concurrentConnections; i++) {
-            promises.push(this.downloadTest(testFile.url + `?stream=${i}&t=${Date.now()}`));
-        }
-        
-        const startTime = performance.now();
-        const results = await Promise.all(promises);
-        const endTime = performance.now();
-        
-        const totalBytes = results.reduce((sum, bytes) => sum + bytes, 0);
-        const duration = (endTime - startTime) / 1000; // Convert to seconds
-        
-        return totalBytes / duration; // Bytes per second
-    }
-
-    async downloadTest(url) {
-        const response = await fetch(url, {
-            method: 'GET',
-            cache: 'no-cache',
-            headers: {
-                'Cache-Control': 'no-cache',
-                'Pragma': 'no-cache'
-            }
-        });
-        
-        if (!response.ok) {
-            throw new Error(`HTTP ${response.status}`);
-        }
-        
-        const reader = response.body.getReader();
-        let totalBytes = 0;
-        
-        while (true) {
-            const { done, value } = await reader.read();
-            if (done) break;
-            totalBytes += value.length;
-        }
-        
-        return totalBytes;
-    }
-
-    async measureUploadSpeed() {
-        // Create test data (1MB)
-        const testData = new Uint8Array(1024 * 1024);
-        crypto.getRandomValues(testData);
-        
-        const promises = [];
-        
-        // Create multiple concurrent upload streams
-        for (let i = 0; i < this.concurrentConnections; i++) {
-            promises.push(this.uploadTest(testData));
-        }
-        
-        const startTime = performance.now();
-        await Promise.all(promises);
-        const endTime = performance.now();
-        
-        const totalBytes = testData.length * this.concurrentConnections;
-        const duration = (endTime - startTime) / 1000;
-        
-        return totalBytes / duration; // Bytes per second
-    }
-
-    async uploadTest(data) {
-        const response = await fetch('https://httpbin.org/post', {
-            method: 'POST',
-            body: data,
-            headers: {
-                'Content-Type': 'application/octet-stream',
-                'Cache-Control': 'no-cache'
-            }
-        });
-        
-        if (!response.ok) {
-            throw new Error(`Upload failed: HTTP ${response.status}`);
-        }
-        
-        return response.json();
-    }
-}
-
-// Alternative: Use dedicated speed test services
-class ExternalSpeedTest {
-    async runFastSpeedTest() {
-        const speedTestEl = document.getElementById('speed-test');
-        if (!speedTestEl) return;
-
-        speedTestEl.textContent = 'Speed: Testing...';
-        
-        try {
-            // Use Fast.com API (Netflix's speed test)
-            const response = await fetch('https://fast.com/api/speedtest', {
-                method: 'GET',
-                cache: 'no-cache'
-            });
-            
-            // Note: Fast.com requires more complex implementation
-            // This is a simplified version
-            speedTestEl.textContent = 'Speed: Use fast.com for accurate fiber testing';
-            
-        } catch (error) {
-            // Fallback to Cloudflare speed test
-            this.runCloudflareSpeedTest();
-        }
-    }
-
-    async runCloudflareSpeedTest() {
-        const speedTestEl = document.getElementById('speed-test');
-        if (!speedTestEl) return;
-
-        try {
-            // Use Cloudflare's speed test endpoint
-            const testUrl = 'https://speed.cloudflare.com/__down?bytes=25000000'; // 25MB
-            const startTime = performance.now();
-            
-            const response = await fetch(testUrl, {
-                cache: 'no-cache',
-                headers: { 'Cache-Control': 'no-cache' }
-            });
-            
-            const data = await response.arrayBuffer();
-            const endTime = performance.now();
-            
-            const bytes = data.byteLength;
-            const duration = (endTime - startTime) / 1000;
-            const mbps = (bytes * 8 / duration / 1024 / 1024).toFixed(1);
-            
-            speedTestEl.textContent = `Speed: ${mbps} Mbps (Download)`;
-            
-        } catch (error) {
-            console.error('Cloudflare speed test failed:', error);
-            speedTestEl.textContent = 'Speed: Test unavailable';
-        }
-    }
-}
-
-// IMPROVED SPEED TEST - Replace your existing runSpeedTest function
+// SIMPLE FAST.COM SPEED TEST - Replace your existing runSpeedTest function
 function runSpeedTest() {
     const speedTestEl = document.getElementById('speed-test');
     if (!speedTestEl) return;
 
     speedTestEl.textContent = 'Speed: Testing...';
 
-    // Use a larger test file for fiber connections
-    const testUrl = 'https://speed.cloudflare.com/__down?bytes=50000000'; // 50MB test
+    // Use Fast.com's token system (this is how their API works)
+    getFastComToken()
+        .then(token => runFastComSpeedTest(token))
+        .catch(error => {
+            console.error('Fast.com speed test failed:', error);
+            // Simple fallback
+            runSimpleFallbackTest();
+        });
+}
+
+async function getFastComToken() {
+    const response = await fetch('https://fast.com/');
+    const html = await response.text();
+    
+    // Extract the token from Fast.com's script
+    const tokenMatch = html.match(/token:"([^"]+)"/);
+    if (!tokenMatch) {
+        throw new Error('Could not extract Fast.com token');
+    }
+    
+    return tokenMatch[1];
+}
+
+async function runFastComSpeedTest(token) {
+    const speedTestEl = document.getElementById('speed-test');
+    
+    try {
+        // Get Fast.com's test URLs
+        const urlResponse = await fetch(`https://api.fast.com/netflix/speedtest/v2?https=true&token=${token}&urlCount=3`);
+        const urlData = await urlResponse.json();
+        
+        if (!urlData || urlData.length === 0) {
+            throw new Error('No test URLs received');
+        }
+        
+        // Run the actual speed test
+        const testUrl = urlData[0].url;
+        const startTime = performance.now();
+        
+        const response = await fetch(testUrl, {
+            cache: 'no-cache',
+            headers: { 'Cache-Control': 'no-cache' }
+        });
+        
+        if (!response.ok) {
+            throw new Error(`HTTP ${response.status}`);
+        }
+        
+        const data = await response.arrayBuffer();
+        const endTime = performance.now();
+        
+        // Calculate speed
+        const bytes = data.byteLength;
+        const duration = (endTime - startTime) / 1000; // seconds
+        const bitsPerSecond = (bytes * 8) / duration;
+        const mbps = Math.round(bitsPerSecond / 1000000);
+        
+        speedTestEl.textContent = `Speed: ${mbps} Mbps`;
+        
+    } catch (error) {
+        console.error('Fast.com test execution failed:', error);
+        runSimpleFallbackTest();
+    }
+}
+
+// Simple fallback if Fast.com doesn't work
+function runSimpleFallbackTest() {
+    const speedTestEl = document.getElementById('speed-test');
+    
+    speedTestEl.textContent = 'Speed: Testing (fallback)...';
+    
+    // Use a reliable CDN with a large file
+    const testUrl = 'https://speed.cloudflare.com/__down?bytes=25000000'; // 25MB
     const startTime = performance.now();
     
     fetch(testUrl, {
         cache: 'no-cache',
-        headers: { 
-            'Cache-Control': 'no-cache',
-            'Pragma': 'no-cache'
-        }
+        headers: { 'Cache-Control': 'no-cache' }
     })
     .then(response => {
         if (!response.ok) throw new Error(`HTTP ${response.status}`);
@@ -577,140 +464,17 @@ function runSpeedTest() {
     .then(data => {
         const endTime = performance.now();
         const bytes = data.byteLength;
-        const duration = (endTime - startTime) / 1000; // Convert to seconds
-        
-        // Proper conversion: bytes per second → bits per second → megabits per second
-        const bytesPerSecond = bytes / duration;
-        const bitsPerSecond = bytesPerSecond * 8;
-        const mbps = Math.round(bitsPerSecond / 1000000); // Convert to Mbps and round
-        
-        speedTestEl.textContent = `Speed: ${mbps} Mbps`;
-        
-        console.log(`Speed test results:
-        - Downloaded: ${(bytes / 1024 / 1024).toFixed(1)} MB
-        - Duration: ${duration.toFixed(2)} seconds  
-        - Speed: ${(bytesPerSecond / 1024 / 1024).toFixed(1)} MB/s
-        - Speed: ${mbps} Mbps`);
-    })
-    .catch(error => {
-        console.error('Speed test failed:', error);
-        
-        // Fallback to multiple smaller concurrent tests
-        runConcurrentSpeedTest();
-    });
-}
-
-// Fallback function for concurrent testing
-function runConcurrentSpeedTest() {
-    const speedTestEl = document.getElementById('speed-test');
-    if (!speedTestEl) return;
-
-    speedTestEl.textContent = 'Speed: Testing (fallback)...';
-
-    // Use multiple larger files concurrently
-    const testUrls = [
-        'https://httpbin.org/bytes/5242880?t1=' + Date.now(), // 5MB
-        'https://httpbin.org/bytes/5242880?t2=' + Date.now(), // 5MB  
-        'https://httpbin.org/bytes/5242880?t3=' + Date.now(), // 5MB
-        'https://httpbin.org/bytes/5242880?t4=' + Date.now()  // 5MB
-    ];
-
-    const startTime = performance.now();
-    
-    Promise.all(testUrls.map(url => 
-        fetch(url, { cache: 'no-cache' }).then(r => r.arrayBuffer())
-    ))
-    .then(results => {
-        const endTime = performance.now();
-        const totalBytes = results.reduce((sum, data) => sum + data.byteLength, 0);
         const duration = (endTime - startTime) / 1000;
         
-        const bytesPerSecond = totalBytes / duration;
-        const bitsPerSecond = bytesPerSecond * 8;
+        const bitsPerSecond = (bytes * 8) / duration;
         const mbps = Math.round(bitsPerSecond / 1000000);
         
         speedTestEl.textContent = `Speed: ${mbps} Mbps`;
-        
-        console.log(`Concurrent speed test results:
-        - Downloaded: ${(totalBytes / 1024 / 1024).toFixed(1)} MB total
-        - Duration: ${duration.toFixed(2)} seconds  
-        - Speed: ${(bytesPerSecond / 1024 / 1024).toFixed(1)} MB/s
-        - Speed: ${mbps} Mbps`);
     })
     .catch(error => {
-        console.error('Concurrent speed test failed:', error);
-        speedTestEl.textContent = 'Speed: Test failed';
+        console.error('Fallback speed test failed:', error);
+        speedTestEl.textContent = 'Speed: Test unavailable';
     });
-}
-
-// Enhanced speed test with WebRTC for even more accuracy
-class WebRTCSpeedTest {
-    async measureRealSpeed() {
-        const speedTestEl = document.getElementById('speed-test');
-        if (!speedTestEl) return;
-
-        speedTestEl.textContent = 'Speed: Advanced testing...';
-        
-        try {
-            // Use multiple large files from different CDNs
-            const testUrls = [
-                'https://ash-speed.hetzner.com/100MB.bin',
-                'https://lg-ams.fdcservers.net/100MBtest.zip',
-                'https://speedtest.selectel.ru/100MB.zip'
-            ];
-            
-            const results = [];
-            
-            for (const url of testUrls) {
-                try {
-                    const speed = await this.testSingleUrl(url);
-                    results.push(speed);
-                } catch (e) {
-                    console.warn(`Failed to test ${url}:`, e);
-                }
-            }
-            
-            if (results.length > 0) {
-                // Use the fastest result (best case scenario)
-                const maxSpeed = Math.max(...results);
-                const mbps = (maxSpeed / 1024 / 1024 * 8).toFixed(1);
-                speedTestEl.textContent = `Speed: ${mbps} Mbps`;
-            } else {
-                throw new Error('All speed tests failed');
-            }
-            
-        } catch (error) {
-            console.error('WebRTC speed test failed:', error);
-            speedTestEl.textContent = 'Speed: Test failed';
-        }
-    }
-    
-    async testSingleUrl(url) {
-        const startTime = performance.now();
-        const response = await fetch(url, {
-            cache: 'no-cache',
-            headers: { 'Cache-Control': 'no-cache' }
-        });
-        
-        if (!response.ok) throw new Error(`HTTP ${response.status}`);
-        
-        const reader = response.body.getReader();
-        let totalBytes = 0;
-        let chunks = 0;
-        
-        while (chunks < 50) { // Limit to prevent excessive data usage
-            const { done, value } = await reader.read();
-            if (done) break;
-            totalBytes += value.length;
-            chunks++;
-        }
-        
-        const endTime = performance.now();
-        const duration = (endTime - startTime) / 1000;
-        
-        return totalBytes / duration; // Bytes per second
-    }
-}
 function initializeApp() {
     // Start time updates
     updateTime();
