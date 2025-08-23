@@ -343,33 +343,14 @@
 
                     </div>
                 </div>
-                        </section>
-                  <section id="traichu">
-                    <h1 class="sr-only">Joey's Homepage</h1>
-                    <aside>
-                        <img id="gif-display" src="" alt="Random GIF" style="width: 360px; height: 240px;">
-                    </aside>
-                </section>
-            
-                <script>
-                    // --- STEP 1: Paste your GIF URLs here ---
-                    const gifUrls = [
-                        "https://github.com/sndjy1986/_traichu/blob/main/GIF/MARIO.GIF?raw=true",
-                        "https://github.com/sndjy1986/_traichu/blob/main/GIF/mario2.gif?raw=true", // <-- Replace with your other GIF URLs
+            </section>
+            <section id="traichu">
+                <h1 class="sr-only">Joey's Homepage</h1>
+                <aside>
+                    <img id="gif-display" src="" alt="Random GIF" style="width: 360px; height: 240px;">
+                </aside>
+            </section>
         
-                    ];
-            
-                    // --- STEP 2: The code below picks a random GIF and displays it ---
-                    // Get the image element
-                    const gifImage = document.getElementById('gif-display');
-                    
-                    // Pick a random index from the gifUrls array
-                    const randomIndex = Math.floor(Math.random() * gifUrls.length);
-                    
-                    // Set the image source to the randomly selected GIF
-                    gifImage.src = gifUrls[randomIndex];
-                </script>
-
             <h2 id="greeting"></h2>
 
             <nav id="dock">
@@ -429,7 +410,7 @@
                     <li><a href="http://www.foxcarolina.com" target="_blank"><img src="https://icons.duckduckgo.com/ip3/foxcarolina.com.ico" class="favicon" alt="FoxCarolina favicon">FoxCarolina</a></li>
                 </ul>
             </section>
-        </section>
+        </header>
     </main>
     <footer id="network-info">
         <div id="ip-info">IP: ...</div>
@@ -438,7 +419,24 @@
         <div id="organization-info">Organization: ...</div>
         <div id="speed-test">Speed: ...</div>
     </footer>
-<script>
-</script>
+
+    <script>
+        // --- THIS SCRIPT IS NOW IN THE CORRECT PLACE ---
+        // --- Paste your GIF URLs here ---
+        const gifUrls = [
+            "https://github.com/sndjy1986/_traichu/blob/main/GIF/MARIO.GIF?raw=true",
+            "https://github.com/sndjy1986/_traichu/blob/main/GIF/mario2.gif?raw=true", // <-- Replace with your other GIF URLs
+        ];
+
+        // --- The code below picks a random GIF and displays it ---
+        // Get the image element
+        const gifImage = document.getElementById('gif-display');
+        
+        // Pick a random index from the gifUrls array
+        const randomIndex = Math.floor(Math.random() * gifUrls.length);
+        
+        // Set the image source to the randomly selected GIF
+        gifImage.src = gifUrls[randomIndex];
+    </script>
 </body>
 </html>
