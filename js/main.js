@@ -440,6 +440,10 @@ function cycleGifs() {
     const gifs = [
         'GIF/MARIO.GIF',
         'GIF/mario2.gif'
+        'GIF/MARIO3.gif'
+        'GIF/MARIO4.gif'
+        'GIF/MARIO5.gif'
+        'GIF/MARIO6.gif'
     ];
     let currentIndex = 0;
 
