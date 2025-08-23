@@ -380,8 +380,8 @@ function runSpeedTest() {
 
     speedTestEl.textContent = 'Speed: Testing...';
 
-    // Use your existing mario.gif but make it larger virtually by downloading multiple times
-    const imageUrl = "https://raw.githubusercontent.com/sndjy1986/_traichu/refs/heads/main/mario.gif";
+    // Use one of the local GIFs
+    const imageUrl = "GIF/MARIO.GIF";
     const downloadSize = 345331; // Size in bytes
     const numDownloads = 10; // Download 10 copies to get more data
     
@@ -431,7 +431,7 @@ function runSpeedTest() {
 }
 
 /**
- * CYCLES THROUGH GIFS IN THE GIF FOLDER
+ * SETS A RANDOM GIF ON PAGE LOAD
  */
 function cycleGifs() {
     const gifDisplay = document.getElementById('gif-display');
@@ -439,18 +439,15 @@ function cycleGifs() {
 
     const gifs = [
         'GIF/MARIO.GIF',
-        'GIF/mario2.gif'
-        'GIF/MARIO3.gif'
-        'GIF/MARIO4.gif'
-        'GIF/MARIO5.gif'
+        'GIF/mario2.gif',
+        'GIF/MARIO3.gif',
+        'GIF/MARIO4.gif',
+        'GIF/MARIO5.gif',
         'GIF/MARIO6.gif'
     ];
-    let currentIndex = 0;
-
-    setInterval(() => {
-        currentIndex = (currentIndex + 1) % gifs.length;
-        gifDisplay.src = gifs[currentIndex];
-    }, 5000); // Change GIF every 5 seconds
+    
+    const randomIndex = Math.floor(Math.random() * gifs.length);
+    gifDisplay.src = gifs[randomIndex];
 }
 
 /**
@@ -480,7 +477,7 @@ function initializeApp() {
     loadNetworkInfo();
     runSpeedTest();
 
-    // Cycle GIFs
+    // Set a random GIF on load
     cycleGifs();
 }
 
