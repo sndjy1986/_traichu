@@ -20,7 +20,25 @@
     body.alert-active {
         padding-top: 105px;
     }
+/* --- Add these new styles for the layout --- */
+header {
+    display: flex;
+    justify-content: center; /* This centers the two columns */
+    align-items: flex-start; /* Aligns columns to the top */
+    gap: 50px; /* Adjusts the space between the GIF and the links */
+    padding: 20px;
+}
 
+.column-left, .column-right {
+    display: flex;
+    flex-direction: column;
+    gap: 20px; /* Space between items inside a column */
+}
+
+/* Override the old fixed positioning */
+#date-time, #weather {
+    position: static;
+}
     #weather-alert {
         display: none;
         background-color: #d9534f;
