@@ -2,311 +2,98 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <title>Joey's Homepage</title>
 
     <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
     <link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png">
-    
-    <script src="js/main.js" defer></script>
+
     <link rel="stylesheet" href="css/main.css">
 
-    <style>
-        :root {
-            --text-color: #333;
-            --link-color: #0066cc;
-        }
-
-        @media (prefers-color-scheme: dark) {
-            :root {
-                --text-color: #ffffff;
-                --link-color: #66b3ff;
-            }
-        }
-
-        body {
-            margin: 0;
-            padding-top: 50px;
-            transition: padding-top 0.3s ease;
-        }
-
-        body.alert-active {
-            padding-top: 105px;
-        }
-        
-        /* ---------------------------------- */
-        /* --- LAYOUT FIXES & IMPROVEMENTS -- */
-        /* ---------------------------------- */
-
-        main {
-            /* This pushes the main content down from the top news bar */
-            position: relative !important;
-            top: 8vh !important; /* Adjust this value to move content up or down */
-        }
-        
-        .main-content-grid {
-            /* This creates the centered, two-column layout */
-            display: flex;
-            justify-content: center;
-            align-items: flex-start;
-            gap: 50px; /* Adjust the space between the columns */
-            padding: 20px;
-        }
-
-        .column-left, .column-right {
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
-        }
-
-        /* Override fixed positions that conflict with the new flex layout */
-        #date-time, #weather {
-            position: static;
-        }
-        
-        /* ------------------------- */
-        /* --- ORIGINAL STYLES --- */
-        /* ------------------------- */
-
-        #weather-alert {
-            display: none;
-            background-color: #d9534f;
-            color: white;
-            padding: 15px;
-            text-align: center;
-            font-size: 18px;
-            font-weight: lighter;
-            position: fixed;
-            top: 0;
-            width: 100%;
-            z-index: 10000;
-            border-bottom: 2px solid #a94442;
-            height: 55px;
-            box-sizing: border-box;
-        }
-
-        #news-ticker {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 50px;
-            background: #000;
-            color: #fff;
-            overflow: hidden;
-            z-index: 9999;
-            border-bottom: 2px solid #333;
-            transition: top 0.3s ease;
-        }
-
-        body.alert-active #news-ticker {
-            top: 55px;
-        }
-
-        #news-content {
-            position: absolute;
-            white-space: nowrap;
-            line-height: 50px;
-            font-size: 16px;
-            font-weight: lighter;
-            animation: scroll-left 100s linear infinite;
-        }
-
-        @keyframes scroll-left {
-            0% { transform: translateX(100vw); }
-            100% { transform: translateX(-100%); }
-        }
-
-        #news-content a {
-            color: #fff;
-            text-decoration: none;
-            margin-right: 80px;
-        }
-
-        #current-time, #current-weather {
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            font-size: 20px;
-            font-weight: lighter;
-            color: var(--text-color);
-        }
-
-        #weather-icon {
-            width: 30px;
-            height: 30px;
-        }
-        
-        #forecast-panel {
-            min-width: 280px;
-        }
-
-        .forecast-day {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-        }
-
-        #greeting {
-            text-align: center;
-            font-size: 18px;
-            font-weight: lighter;
-            color: var(--text-color);
-            margin: -13px 0;
-        }
-
-        #dock ul {
-            list-style: none;
-            padding: 0;
-            margin: 0;
-            display: flex;
-            justify-content: space-evenly;
-            align-items: flex-end;
-            height: 28px;
-        }
-        
-        #dock li a:hover {
-            transform: scale(1.3) translateY(-10px);
-        }
-
-        #bookmarks ul {
-            display: flex;
-            justify-content: space-around;
-            align-items: center;
-            padding: 0 5px;
-            margin: 0 auto 10px;
-            list-style: none;
-        }
-
-        #bookmarks a {
-            display: inline-flex;
-            align-items: center;
-            text-decoration: none;
-            font-size: 14px;
-            font-weight: lighter;
-            color: var(--link-color);
-        }
-
-        .favicon {
-            width: 20px;
-            height: 20px;
-            margin-right: 8px;
-        }
-
-        #network-info {
-            position: fixed;
-            bottom: 0;
-            width: 100%;
-            display: flex;
-            justify-content: space-around;
-            padding: 10px;
-            background: rgba(0,0,0,0.5);
-            color: white;
-            font-size: 14px;
-        }
-    </style>
+    <script src="js/main.js" defer></script>
 </head>
 <body>
 
-    <div id="weather-alert"></div>
-    <div id="news-ticker">
-        <div id="news-content">🔴 Loading RSS News Feed.......</div>
-    </div>
+    <header>
+        <section id="date-time">
+            <h2 class="sr-only">Date & Time</h2>
+            <div id="time-display"></div>
+            <div id="date-display"></div>
+        </section>
+        <section id="weather">
+             <div id="current-weather">
+                <img id="weather-icon" src="" alt="Weather">
+                <span id="current-temp">Loading...</span>
+            </div>
+            <div id="current-location"></div>
+        </section>
+    </header>
 
     <main>
-        <div class="main-content-grid">
+        <section id="traichu">
+            <h1 class="sr-only">Joey's Homepage</h1>
+            
+            <aside>
+                <img id="gif-display" src="" alt="Random GIF">
+            </aside>
+            
+            <h2 id="greeting"></h2>
 
-            <div class="column-left">
-                <section id="date-time">
-                    <h2 class="sr-only">Date & Time</h2>
-                    <div id="current-time">
-                        <span id="time-display"></span>
-                        <span id="date-display"></span>
-                    </div>
-                </section>
-                <section id="traichu">
-                    <h1 class="sr-only">Joey's Homepage</h1>
-                    <aside>
-                        <img id="gif-display" src="" alt="Random GIF" style="width: 360px; height: 240px;">
-                    </aside>
-                </section>
-            </div>
+            <nav id="dock">
+                <ul>
+                    <li><a href="https://mail.google.com" target="_blank" title="Gmail"><img src="https://icons.duckduckgo.com/ip3/gmail.google.com.ico" alt="Gmail"></a></li>
+                    <li><a href="https://calendar.google.com" target="_blank" title="Calendar"><img src="https://upload.wikimedia.org/wikipedia/commons/a/a5/Google_Calendar_icon_%282020%29.svg" alt="Calendar"></a></li>
+                    <li><a href="https://drive.google.com" target="_blank" title="Google Drive"><img src="https://upload.wikimedia.org/wikipedia/commons/1/12/Google_Drive_icon_%282020%29.svg" alt="Google Drive"></a></li>
+                    <li><a href="https://github.com" target="_blank" title="GitHub"><img src="https://icons.duckduckgo.com/ip3/github.com.ico" alt="GitHub" style="filter: invert(1);"></a></li>
+                    <li><a href="https://login.k12.com/" target="_blank" title="Education"><img src="https://icons.duckduckgo.com/ip3/k12.com.ico" alt="Education"></a></li>
+                </ul>
+            </nav>
 
-            <div class="column-right">
-                <section id="weather">
-                    <div id="current-weather">
-                        <img id="weather-icon" src="" alt="Weather">
-                        <span id="current-temp">Loading...</span>
-                        <span id="current-location">Anderson, SC</span>
-                    </div>
-                    <div id="forecast-panel">
-                        <div id="forecast-days"></div>
-                    </div>
-                </section>
-                <h2 id="greeting"></h2>
-                <nav id="dock">
-                    <ul>
-                        <li><a href="https://mail.google.com" target="_blank" title="Gmail"><img src="https://icons.duckduckgo.com/ip3/gmail.google.com.ico" alt="Gmail"></a></li>
-                        <li><a href="https://cloudflare.com" target="_blank" title="Cloudflare"><img src="https://icons.duckduckgo.com/ip3/cloudflare.com.ico" alt="Cloudflare"></a></li>
-                        <li><a href="https://drive.google.com" target="_blank" title="Google Keep"><img src="https://upload.wikimedia.org/wikipedia/commons/1/12/Google_Drive_icon_%282020%29.svg" alt="Google Drive"></a></li>
-                        <li><a href="https://kai.nl.tab.digital/login" target="_blank" title="NextClouod"><img src="https://raw.githubusercontent.com/sndjy1986/windows-98/refs/heads/main/icons/msagent.ico" alt="NextCloud"></a></li>
-                        <li><a href="https://github.com" target="_blank" title="GitHub"><img src="https://icons.duckduckgo.com/ip3/github.com.ico" alt="GitHub" style="filter: invert(100%);"></a></li>
-                        <li><a href="https://login.k12.com/" target="_blank" title="Education"><img src="https://icons.duckduckgo.com/ip3/k12.com.ico" alt="Education"></a></li>
-                        <li><a href="https://andersoncounty911_sc.transport.net/#/home/dashboard?facilityId=52109&operation=upcomingTrips" target="_blank" title="Emergency Services"><img src="https://icons.duckduckgo.com/ip3/med-trans.net.ico" alt="Emergency Services" style="filter: invert(100%);"></a></li>
-                        <li><a href="https://gemini.google.com/app" target="_blank" title="Gemini"><img src="https://icons.duckduckgo.com/ip3/gemini.google.com.ico" alt="Gemini"></a></li>
-                        <li><a href="calendar.html" target="_blank" title="Calendar"><img src="https://upload.wikimedia.org/wikipedia/commons/a/a5/Google_Calendar_icon_%282020%29.svg" alt="Calendar"></a></li>
-                    </ul>
-                </nav>
-                <section id="search">
-                    <h2 class="sr-only">Search</h2>
-                    <form action="https://www.google.com/search" method="get" target="_blank">
-                        <input type="text" id="q" name="q" autofocus>
-                        <button class="sr-only" tabindex="-1">Search</button>
-                    </form>
-                </section>
-                <section id="bookmarks">
-                    <h2 class="sr-only">Bookmarks</h2>
-                    <ul>
-                        <li><a href="https://scheduling.esosuite.net/Login.aspx?DB=priorityambulance" target="_blank"><img src="https://icons.duckduckgo.com/ip3/eso.org.ico" class="favicon" alt="ESO">ESO Suite</a></li>
-                        <li><a href="https://vanguard.emsanyware.com/" target="_blank"><img src="https://icons.duckduckgo.com/ip3/emsanyware.com.ico" class="favicon" alt="Vanguard">EMS Anyware</a></li>
-                        <li><a href="https://drive.google.com/file/d/1i2Pybwtw5h-tDiBGzM1QLVQumYZx0Ubz/view?usp=drive_link" target="_blank"><img src="https://icons.duckduckgo.com/ip3/dead.net.ico" class="favicon" alt="Coroner Schedule">Coroner Schedule</a></li>
-                        <li><a href="https://learn.emergencydispatch.org/academy/my_learning/dashboard" target="_blank"><img src="https://icons.duckduckgo.com/ip3/emergencydispatch.org.ico" class="favicon" alt="EMD Training">PRO-QA Class</a></li>
-                        <li><a href="https://docs.google.com/spreadsheets/d/1H6C59UoF_g1QHSutXQCqBUUhfW4r2rLoNaTe0ZRQYSw/edit?usp=sharing" target="_blank"><img src="https://icons.duckduckgo.com/ip3/drive.google.com.ico" class="favicon" alt="Daily WorkSheet">Daily WorkSheet</a></li>
-                        <li><a href="https://forms.microsoft.com/pages/responsepage.aspx?id=Zh-exeJVn0SAfe_1FF9Zi2FaRW6gaHhKjeF02t2Aq8tURFAwVDVVUEVVRzZRODNTNkgyUFJNMDBHSS4u" target="_blank"><img src="https://raw.githubusercontent.com/sndjy1986/windows-98/refs/heads/main/icons/ram_drive.ico" class="favicon" alt="Daily WorkSheet">Daily Truck Form</a></li>
-                    </ul>
-                    <ul>
-                        <li><a href="http://windows98.sndjy.us" target="_blank"><img src="https://icons.duckduckgo.com/ip3/sndjy.us.org.ico" class="favicon" alt="ESO">Windows Home</a></li>
-                        <li><a href="https://dashboard.heroku.com/apps/truck/settings" target="_blank"><img src="https://icons.duckduckgo.com/ip3/heroku.com.ico" class="favicon" alt="Dispatch Timers">Small Server</a></li>
-                        <li><a href="http://dos.sndjy.us" target="_blank"><img src="https://upload.wikimedia.org/wikipedia/commons/3/3d/Msdos-icon.png" class="favicon" alt="DOS 6.22">Simulated DOS</a></li>
-                        <li><a href="https://support.priorityambulance.com/helpdesk/WebObjects/Helpdesk.woa" target="_blank"><img src="https://icons.duckduckgo.com/ip3/sndjy.us.com.ico" class="favicon" alt="Priority Support">Work Support</a></li>
-                        <li><a href="https://cloudflare.com/" target="_blank"><img src="https://icons.duckduckgo.com/ip3/cloudflare.com.ico" class="favicon" alt="CloudFlare">Cloudflare</a></li>
-                        <li><a href="https://telehack.com" target="_blank"><img src="https://icons.duckduckgo.com/ip3/telehack.com.ico" class="favicon" alt="Telehack favicon">Telehack</a></li>
-                    </ul>
-                    </section>
-            </div>
-        </div>
+            <section id="search">
+                <h2 class="sr-only">Search</h2>
+                <form action="https://www.google.com/search" method="get" target="_blank">
+                    <input type="text" id="q" name="q" placeholder="Search..." autofocus>
+                    <button type="submit" class="sr-only">Search</button>
+                </form>
+            </section>
+
+            <section id="bookmarks">
+                <ul>
+                    <li><a href="https://scheduling.esosuite.net/Login.aspx?DB=priorityambulance" target="_blank"><img src="https://icons.duckduckgo.com/ip3/eso.org.ico" class="favicon" alt="">ESO Suite</a></li>
+                    <li><a href="https://vanguard.emsanyware.com/" target="_blank"><img src="https://icons.duckduckgo.com/ip3/emsanyware.com.ico" class="favicon" alt="">EMS Anyware</a></li>
+                    <li><a href="https://drive.google.com/file/d/1i2Pybwtw5h-tDiBGzM1QLVQumYZx0Ubz/view?usp=drive_link" target="_blank"><img src="https://icons.duckduckgo.com/ip3/dead.net.ico" class="favicon" alt="">Coroner Schedule</a></li>
+                </ul>
+                <ul>
+                    <li><a href="http://windows98.sndjy.us" target="_blank"><img src="https://icons.duckduckgo.com/ip3/sndjy.us.org.ico" class="favicon" alt="">Windows Home</a></li>
+                    <li><a href="https://dashboard.heroku.com/apps/truck/settings" target="_blank"><img src="https://icons.duckduckgo.com/ip3/heroku.com.ico" class="favicon" alt="">Small Server</a></li>
+                    <li><a href="http://dos.sndjy.us" target="_blank"><img src="https://upload.wikimedia.org/wikipedia/commons/3/3d/Msdos-icon.png" class="favicon" alt="">Simulated DOS</a></li>
+                </ul>
+            </section>
+        </section>
     </main>
 
     <footer id="network-info">
         <div id="ip-info">IP: ...</div>
         <div id="location-info">Location: ...</div>
         <div id="asn-info">ASN: ...</div>
-        <div id="organization-info">Organization: ...</div>
-        <div id="speed-test">Speed: ...</div>
     </footer>
 
     <script>
-        const gifUrls = [
-            "https://github.com/sndjy1986/_traichu/blob/main/GIF/MARIO.GIF?raw=true",
-            "https://github.com/sndjy1986/_traichu/blob/main/GIF/mario2.gif?raw=true",
-            // Add more raw GIF URLs here
-        ];
-
-        const gifImage = document.getElementById('gif-display');
-        if (gifImage) {
-            const randomIndex = Math.floor(Math.random() * gifUrls.length);
-            gifImage.src = gifUrls[randomIndex];
-        }
+        document.addEventListener('DOMContentLoaded', () => {
+            const gifUrls = [
+                "GIF/MARIO.GIF",
+                "GIF/mario2.gif"
+                // Add more local GIF paths here
+            ];
+            const gifImage = document.getElementById('gif-display');
+            if (gifImage) {
+                const randomIndex = Math.floor(Math.random() * gifUrls.length);
+                gifImage.src = gifUrls[randomIndex];
+            }
+        });
     </script>
+
 </body>
 </html>
