@@ -322,26 +322,14 @@
         </div>
     </div>
 
-    <main>
-        <header>
+   <main>
+    <header>
+        <div class="column-left">
             <section id="date-time">
                 <h2 class="sr-only">Date & Time</h2>
                 <div id="current-time">
                     <span id="time-display"></span>
                     <span id="date-display"></span>
-                </div>
-            </section>
-            <section id="weather">
-                <div id="current-weather">
-                    <img id="weather-icon" src="" alt="Weather">
-                    <span id="current-temp">Loading...</span>
-                    <span id="current-location">Anderson, SC</span>
-                </div>
-
-                <div id="forecast-panel">
-                    <div id="forecast-days">
-
-                    </div>
                 </div>
             </section>
             <section id="traichu">
@@ -350,7 +338,19 @@
                     <img id="gif-display" src="" alt="Random GIF" style="width: 360px; height: 240px;">
                 </aside>
             </section>
-        
+        </div>
+        <div class="column-right">
+            <section id="weather">
+                <div id="current-weather">
+                    <img id="weather-icon" src="" alt="Weather">
+                    <span id="current-temp">Loading...</span>
+                    <span id="current-location">Anderson, SC</span>
+                </div>
+                <div id="forecast-panel">
+                    <div id="forecast-days"></div>
+                </div>
+            </section>
+
             <h2 id="greeting"></h2>
 
             <nav id="dock">
@@ -410,8 +410,9 @@
                     <li><a href="http://www.foxcarolina.com" target="_blank"><img src="https://icons.duckduckgo.com/ip3/foxcarolina.com.ico" class="favicon" alt="FoxCarolina favicon">FoxCarolina</a></li>
                 </ul>
             </section>
+        </div>
         </header>
-    </main>
+</main>
     <footer id="network-info">
         <div id="ip-info">IP: ...</div>
         <div id="location-info">Location: ...</div>
