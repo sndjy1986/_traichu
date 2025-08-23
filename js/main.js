@@ -431,6 +431,25 @@ function runSpeedTest() {
 }
 
 /**
+ * CYCLES THROUGH GIFS IN THE GIF FOLDER
+ */
+function cycleGifs() {
+    const gifDisplay = document.getElementById('gif-display');
+    if (!gifDisplay) return;
+
+    const gifs = [
+        'GIF/MARIO.GIF',
+        'GIF/mario2.gif'
+    ];
+    let currentIndex = 0;
+
+    setInterval(() => {
+        currentIndex = (currentIndex + 1) % gifs.length;
+        gifDisplay.src = gifs[currentIndex];
+    }, 5000); // Change GIF every 5 seconds
+}
+
+/**
  * MAIN FUNCTION TO INITIALIZE THE PAGE
  */
 function initializeApp() {
@@ -456,6 +475,9 @@ function initializeApp() {
     // Load network info and run speed test
     loadNetworkInfo();
     runSpeedTest();
+
+    // Cycle GIFs
+    cycleGifs();
 }
 
 // Wait for HTML to be loaded, then run the app
