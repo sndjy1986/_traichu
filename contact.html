@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png">
+    <script src="js/main.js"></script>
+    <link rel="stylesheet" href="css/main.css">
+    <title>Joey's Homepage - Contact Me</title>
+
+<style>
+    body {
+        margin: 0;
+        padding-top: 50px;
+        transition: padding-top 0.3s ease;
+    }
+
+    body.alert-active {
+        padding-top: 105px;
+    }
+
+    #weather-alert {
+        display: none;
+        background-color: #d9534f;
+        color: white;
+        padding: 15px;
+        text-align: center;
+        font-size: 18px;
+        font-weight: lighter;
+        position: fixed;
+        top: 0;
+        width: 100%;
+        z-index: 10000;
+        border-bottom: 2px solid #a94442;
+        height: 55px;
+        box-sizing: border-box;
+    }
+
+    #news-ticker {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 50px;
+        background: #000;
+        color: #fff;
+        overflow: hidden;
+        z-index: 9999;
+        border-bottom: 2px solid #333;
+        transition: top 0.3s ease;
+    }
+
+    body.alert-active #news-ticker {
+        top: 55px;
+    }
+
+    #news-content {
+        position: absolute;
+        white-space: nowrap;
+        line-height: 50px;
+        font-size: 16px;
+        font-weight: lighter;
+        animation-name: scroll-left;
+        animation-duration: 100s;
+        animation-timing-function: linear;
+        animation-iteration-count: infinite;
+        will-change: transform;
+    }
+
+    @keyframes scroll-left {
+        0% { transform: translateX(100vw); }
+        100% { transform: translateX(-100%); }
+    }
+
+    #news-content a {
+        color: #fff;
+        text-decoration: none;
+        margin-right: 80px;
+    }
+
+    #news-content a:hover {
+        text-decoration: underline;
+    }
+
+    main {
+        position: relative !important;
+        top: 10px !important;
+    }
+
+    #weather {
+        position: fixed;
+        top: 60px;
+        right: 20px;
+        display: inline-block;
+        background: transparent;
+        padding: 5px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        z-index: 999;
+    }
+
+    #date-time {
+        position: fixed;
+        top: 60px;
+        left: 20px;
+        display: inline-block;
+        background: transparent;
+        padding: 5px;
+        z-index: 999;
+    }
+
+    #current-time {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        font-size: 20px;
+        font-weight: lighter;
+        color: var(--text-color);
+    }
+
+    #current-weather {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        font-size: 20px;
+        font-weight: lighter;
+        color: var(--text-color);
+    }
+
+    #weather-icon {
+        width: 30px;
+        height: 30px;
+    }
+
+    :root {
+        --text-color: #333;
+        --link-color: #0066cc;
+    }
+
+    @media (prefers-color-scheme: dark) {
+        :root {
+            --text-color: #ffffff;
+            --link-color: #66b3ff;
+        }
+        body { background-color: #121212; }
+    }
+
+    /* Contact Page Specific Styles */
+    .contact-container {
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 40px 20px;
+        text-align: center;
+    }
+
+    .contact-header {
+        margin-bottom: 40px;
+    }
+
+    .contact-header h1 {
+        font-size: 2.5em;
+        color: var(--text-color);
+        margin-bottom: 10px;
+        font-weight: lighter;
+    }
+
+    .contact-header p {
+        font-size: 1.2em;
+        color: var(--text-color);
+        opacity: 0.8;
+        font-weight: lighter;
+    }
+
+    .contact-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 30px;
+        margin-bottom: 40px;
+    }
+
+    .contact-section {
+        background: rgba(255, 255, 255, 0.1);
+        backdrop-filter: blur(10px);
+        border-radius: 15px;
+        padding: 30px;
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .contact-section:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+    }
+
+    .contact-section h2 {
+        color: var(--text-color);
+        margin-bottom: 20px;
+        font-size: 1.5em;
+        font-weight: lighter;
+    }
+
+    .contact-item {
+        display: flex;
+        align-items: center;
+        margin-bottom: 15px;
+        padding: 10px;
+        border-radius: 8px;
+        transition: background-color 0.2s ease;
+    }
+
+    .contact-item:hover {
+        background-color: rgba(255, 255, 255, 0.1);
+    }
+
+    .contact-item img {
+        width: 24px;
+        height: 24px;
+        margin-right: 15px;
+        border-radius: 4px;
+    }
+
+    .contact-item a {
+        color: var(--link-color);
+        text-decoration: none;
+        font-size: 1.1em;
+        font-weight: lighter;
+        transition: color 0.2s ease;
+    }
+
+    .contact-item a:hover {
+        text-decoration: underline;
+        opacity: 0.8;
+    }
+
+    .contact-item span {
+        color: var(--text-color);
+        font-size: 1.1em;
+        font-weight: lighter;
+    }
+
+    .home-button {
+        display: inline-block;
+        background-color: rgba(255, 255, 255, 0.1);
+        color: var(--text-color);
+        text-decoration: none;
+        border-radius: 25px;
+        padding: 12px 30px;
+        font-size: 1.1em;
+        border: 2px solid var(--link-color);
+        transition: all 0.3s ease;
+        margin-top: 30px;
+        font-weight: lighter;
+    }
+
+    .home-button:hover {
+        background-color: var(--link-color);
+        color: white;
+        transform: scale(1.05);
+    }
+
+    /* Dark mode adjustments */
+    @media (prefers-color-scheme: dark) {
+        .contact-section {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .contact-item:hover {
+            background-color: rgba(255, 255, 255, 0.05);
+        }
+        
+        .home-button {
+            background-color: rgba(255, 255, 255, 0.05);
+        }
+    }
+</style>
+</head>
+<body>
+
+    <div id="weather-alert"></div>
+
+    <div id="news-ticker">
+        <div id="news-content">
+            🔴 Loading RSS News Feed.......
+        </div>
+    </div>
+
+    <main>
+        <header>
+            <section id="date-time">
+                <h2 class="sr-only">Date & Time</h2>
+                <div id="current-time">
+                    <span id="time-display"></span>
+                    <span id="date-display"></span>
+                </div>
+            </section>
+            <section id="weather">
+                <div id="current-weather">
+                    <img id="weather-icon" src="" alt="Weather">
+                    <span id="current-temp">Loading...</span>
+                    <span id="current-location">Anderson, SC</span>
+                </div>
+            </section>
+        </header>
+
+        <div class="contact-container">
+            <div class="contact-header">
+                <h1>Contact Joey</h1>
+                <p>Let's connect! Here are all the ways you can reach me.</p>
+            </div>
+
+            <div class="contact-grid">
+                <!-- Personal Contact Section -->
+                <div class="contact-section">
+                    <h2>Personal</h2>
+                    
+                    <div class="contact-item">
+                        <img src="https://icons.duckduckgo.com/ip3/gmail.com.ico" alt="Email">
+                        <a href="mailto:sndjy1986@gmail.com">sndjy1986@gmail.com</a>
+                    </div>
+
+                    <div class="contact-item">
+                        <img src="https://icons.duckduckgo.com/ip3/facebook.com.ico" alt="Facebook">
+                        <a href="https://facebook.com/joey.smith" target="_blank">Facebook Profile</a>
+                    </div>
+
+                    <div class="contact-item">
+                        <img src="https://icons.duckduckgo.com/ip3/tiktok.com.ico" alt="TikTok">
+                        <a href="https://tiktok.com/@joeysmith" target="_blank">TikTok Profile</a>
+                    </div>
+
+                    <div class="contact-item">
+                        <img src="https://icons.duckduckgo.com/ip3/instagram.com.ico" alt="Instagram">
+                        <a href="https://instagram.com/joey_smith" target="_blank">Instagram</a>
+                    </div>
+                </div>
+
+                <!-- Work Contact Section -->
+                <div class="contact-section">
+                    <h2>Professional</h2>
+                    
+                    <div class="contact-item">
+                        <img src="https://icons.duckduckgo.com/ip3/priorityambulance.com.ico" alt="Work Email">
+                        <a href="mailto:joey@priorityambulance.com">joey@priorityambulance.com</a>
+                    </div>
+
+                    <div class="contact-item">
+                        <img src="https://raw.githubusercontent.com/sndjy1986/windows-98/refs/heads/main/icons/phone_dialer_classic.ico" alt="Work Phone">
+                        <span>Work Cell: (864) 555-0123</span>
+                    </div>
+
+                    <div class="contact-item">
+                        <img src="https://icons.duckduckgo.com/ip3/linkedin.com.ico" alt="LinkedIn">
+                        <a href="https://linkedin.com/in/joeysmith" target="_blank">LinkedIn Profile</a>
+                    </div>
+
+                    <div class="contact-item">
+                        <img src="https://icons.duckduckgo.com/ip3/github.com.ico" alt="GitHub" style="filter: invert(100%);">
+                        <a href="https://github.com/sndjy1986" target="_blank">GitHub Profile</a>
+                    </div>
+                </div>
+
+                <!-- Location & Emergency Services -->
+                <div class="contact-section">
+                    <h2>Location & Services</h2>
+                    
+                    <div class="contact-item">
+                        <img src="https://icons.duckduckgo.com/ip3/priorityambulance.com.ico" alt="Work Address">
+                        <span>Priority Ambulance<br>Anderson County, SC</span>
+                    </div>
+
+                    <div class="contact-item">
+                        <img src="https://icons.duckduckgo.com/ip3/med-trans.net.ico" alt="Emergency Services" style="filter: invert(100%);">
+                        <span>Emergency Medical Services<br>Anderson County 911</span>
+                    </div>
+
+                    <div class="contact-item">
+                        <img src="https://icons.duckduckgo.com/ip3/maps.google.com.ico" alt="Location">
+                        <a href="https://www.google.com/maps/place/Anderson,+SC" target="_blank">Anderson, South Carolina</a>
+                    </div>
+                </div>
+
+                <!-- Digital Presence -->
+                <div class="contact-section">
+                    <h2>Digital Presence</h2>
+                    
+                    <div class="contact-item">
+                        <img src="https://icons.duckduckgo.com/ip3/sndjy.us.ico" alt="Personal Website">
+                        <a href="http://joey.sndjy.us" target="_blank">Personal Website</a>
+                    </div>
+
+                    <div class="contact-item">
+                        <img src="https://upload.wikimedia.org/wikipedia/commons/3/3d/Msdos-icon.png" alt="DOS Site">
+                        <a href="http://dos.sndjy.us" target="_blank">DOS Simulator</a>
+                    </div>
+
+                    <div class="contact-item">
+                        <img src="https://icons.duckduckgo.com/ip3/sndjy.us.ico" alt="Windows 98">
+                        <a href="http://windows98.sndjy.us" target="_blank">Windows 98 Site</a>
+                    </div>
+
+                    <div class="contact-item">
+                        <img src="https://icons.duckduckgo.com/ip3/heroku.com.ico" alt="Projects">
+                        <a href="https://truck-5c2f62a8549e.herokuapp.com/" target="_blank">Dispatch Timers</a>
+                    </div>
+                </div>
+            </div>
+
+            <a href="index.html" class="home-button">← Return to Homepage</a>
+        </div>
+    </main>
+
+    <script>
+        // Load news feed function (same as main page)
+        function loadNewsFeed() {
+            const newsContent = document.getElementById('news-content');
+            const cacheKey = 'foxNewsFeedCache';
+            const cacheDuration = 15 * 60 * 1000;
+
+            const cachedData = localStorage.getItem(cacheKey);
+            if (cachedData) {
+                const { html, timestamp } = JSON.parse(cachedData);
+                
+                if (Date.now() - timestamp < cacheDuration) {
+                    console.log('Loading news instantly from cache.');
+                    newsContent.innerHTML = html;
+                    return;
+                }
+            }
+
+            console.log('Fetching fresh news from the server.');
+            fetch('https://api.rss2json.com/v1/api.json?rss_url=' + encodeURIComponent('https://moxie.foxnews.com/google-publisher/latest.xml'))
+            .then(response => response.json())
+            .then(data => {
+                let html = '';
+                if (data.items && data.items.length > 0) {
+                    data.items.forEach(item => {
+                        html += `<a href="${item.link}" target="_blank">🦊 ${item.title}</a>`;
+                    });
+                } else {
+                    throw new Error('No items found in RSS feed.');
+                }
+
+                newsContent.innerHTML = html;
+                const dataToCache = { html: html, timestamp: Date.now() };
+                localStorage.setItem(cacheKey, JSON.stringify(dataToCache));
+                
+                console.log('Headlines loaded and cached successfully!');
+            })
+            .catch(error => {
+                console.error('Error fetching or parsing RSS feed:', error);
+                newsContent.innerHTML = '🦊 News feed temporarily unavailable - check back later 🦊';
+            });
+        }
+
+        loadNewsFeed();
+        setInterval(loadNewsFeed, 900000);
+    </script>
+</body>
+</html>
