@@ -413,14 +413,49 @@
             </section>
         </section>
     </main>
-    <footer id="network-info">
-        <div id="ip-info">IP: ...</div>
-        <div id="location-info">Location: ...</div>
-        <div id="asn-info">ASN: ...</div>
-        <div id="organization-info">Organization: ...</div>
-        <div id="speed-test">Speed: ...</div>
-    </footer>
-<script>
-</script>
-</body>
-</html>
+   <!-- Replace your existing footer section in index.html with this: -->
+
+<footer id="network-info">
+    <div id="ip-info">IP: ...</div>
+    <div id="location-info">Location: ...</div>
+    <div id="asn-info">ASN: ...</div>
+    <div id="organization-info">Organization: ...</div>
+    <div id="speed-test">Speed: ...</div>
+    <div id="contact-link">
+        <a href="contact.html" style="color: white; text-decoration: none; font-weight: bold; border: 1px solid rgba(255,255,255,0.3); padding: 5px 15px; border-radius: 15px; transition: all 0.3s ease; display: inline-block;" 
+           onmouseover="this.style.backgroundColor='rgba(255,255,255,0.2)'; this.style.borderColor='rgba(255,255,255,0.6)'" 
+           onmouseout="this.style.backgroundColor='transparent'; this.style.borderColor='rgba(255,255,255,0.3)'">
+           📧 Contact Me
+        </a>
+    </div>
+</footer>
+
+<!-- And update the CSS for the footer to accommodate the new link: -->
+<style>
+#network-info {
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    display: flex;
+    justify-content: space-around;
+    align-items: center; /* Added this */
+    padding: 10px;
+    background: rgba(0,0,0,0.5);
+    color: white;
+    font-size: 14px;
+    flex-wrap: wrap; /* Added this for mobile responsiveness */
+}
+
+/* Make the contact link more prominent on mobile */
+@media (max-width: 768px) {
+    #network-info {
+        font-size: 12px;
+        padding: 8px 5px;
+    }
+    
+    #contact-link a {
+        font-size: 12px !important;
+        padding: 3px 10px !important;
+    }
+}
+</style>
