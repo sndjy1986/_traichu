@@ -153,7 +153,7 @@ aside svg { height: 4.5rem; }
         border: 0.125rem solid hsl(var(--color-white-hsl) / 0.25);
     }
     
-    #search input:hover { border-color: hsl(var(--color-white-hsl) / 0.5); }    
+    #search input:hover { border-color: var(--color-light-green); }    
 
     #bookmarks a:focus,
     #bookmarks a:hover { background-color: hsl(var(--color-white-hsl) / 0.05); }
@@ -167,7 +167,7 @@ aside svg { height: 4.5rem; }
         border: 0.125rem solid hsl(var(--color-black-hsl) / 0.25);
     } 
 
-    #search input:hover { border-color: hsl(var(--color-black-hsl) / 0.5); }
+    #search input:hover { border-color: var(--color-light-green); }
 
     #bookmarks a:focus,
     #bookmarks a:hover { background-color: hsl(var(--color-black-hsl) / 0.05); }
@@ -175,8 +175,8 @@ aside svg { height: 4.5rem; }
 
 #search input:focus {
     background-color: hsl(var(--color-white-hsl) / 0.025);
-    border-color: var(--color-orange);
-    outline-color: hsl(var(--color-orange-hsl) / 0.25);
+    border-color: var(--color-light-green);
+    outline-color: hsl(var(--color-light-green-hsl) / 0.25);
 }
 
 #bookmarks {
@@ -219,7 +219,7 @@ aside svg { height: 4.5rem; }
 
 #bookmarks a:focus,
 #bookmarks a:hover {
-    color: var(--primary-link-hover-color);
+    color: var(--color-light-green);
     outline: none;
 }
 
