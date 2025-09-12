@@ -92,11 +92,22 @@
         </div>
     </div>
 
+    <div class="control-box">
+        <h2>Living Room Lights</h2>
+        <div class="button-container">
+            <button id="livingRoomLightsOn" class="control-button">ON</button>
+            <button id="livingRoomLightsOff" class="control-button">OFF</button>
+        </div>
+    </div>
+
     <div id="status" class="status-message"></div>
 
     <script>
         const BEDROOM_LIGHTS_ON_URL = 'https://mkzense.com/webhook/alexa/cf2d79a3d274ff9dec3bac63cb279af09fcdb7f4/Bedtime';
         const BEDROOM_LIGHTS_OFF_URL = 'https://mkzense.com/webhook/alexa/cf2d79a3d274ff9dec3bac63cb279af09fcdb7f4/Wakeup';
+        const LIVING_ROOM_LIGHTS_ON_URL = 'https://mkzense.com/webhook/alexa/cf2d79a3d274ff9dec3bac63cb279af09fcdb7f4/Trigger5';
+        const LIVING_ROOM_LIGHTS_OFF_URL = 'https://mkzense.com/webhook/alexa/cf2d79a3d274ff9dec3bac63cb279af09fcdb7f4/Trigger4';
+
 
         function sendWebhook(url, statusDiv) {
             statusDiv.textContent = 'Sending command...';
@@ -125,6 +136,14 @@
 
         document.getElementById('bedroomLightsOff').addEventListener('click', () => {
             sendWebhook(BEDROOM_LIGHTS_OFF_URL, document.getElementById('status'));
+        });
+
+        document.getElementById('livingRoomLightsOn').addEventListener('click', () => {
+            sendWebhook(LIVING_ROOM_LIGHTS_ON_URL, document.getElementById('status'));
+        });
+
+        document.getElementById('livingRoomLightsOff').addEventListener('click', () => {
+            sendWebhook(LIVING_ROOM_LIGHTS_OFF_URL, document.getElementById('status'));
         });
     </script>
 </body>
