@@ -53,48 +53,63 @@
     <h1>Bedroom Fan</h1>
     <div class="button-container">
         <button id="toggleFan" class="control-button">On/Off</button>
-        <button id="bedroomLightsOn" class="control-button">Bedroom Lights ON</button>
+        <button id="toggleBedroomLights" class="control-button"></button>
     </div>
     <div id="status" class="status-message"></div>
 
     <script>
+        const BEDROOM_LIGHTS_ON_URL = 'https://mkzense.com/webhook/alexa/cf2d79a3d274ff9dec3bac63cb279af09fcdb7f4/Bedtime';
+        const BEDROOM_LIGHTS_OFF_URL = 'https://mkzense.com/webhook/alexa/cf2d79a3d274ff9dec3bac63cb279af09fcdb7f4/Wakeup';
+        const BEDROOM_LIGHTS_STATE_KEY = 'bedroomLightsState';
+
+        function sendWebhook(url, statusDiv) {
+            statusDiv.textContent = 'Sending command...';
+            fetch(url, {
+                method: 'GET',
+                mode: 'no-cors'
+            })
+            .then(() => {
+                statusDiv.textContent = 'Command sent successfully!';
+                setTimeout(() => statusDiv.textContent = '', 3000);
+            })
+            .catch(error => {
+                console.error('Error sending command:', error);
+                statusDiv.textContent = 'Error sending command.';
+                setTimeout(() => statusDiv.textContent = '', 3000);
+            });
+        }
+
+        function updateBedroomLightsButton() {
+            const button = document.getElementById('toggleBedroomLights');
+            const currentState = localStorage.getItem(BEDROOM_LIGHTS_STATE_KEY) || 'off'; // Default to off
+
+            if (currentState === 'on') {
+                button.textContent = 'Bedroom Lights (ON)';
+            } else {
+                button.textContent = 'Bedroom Lights (OFF)';
+            }
+        }
+
         document.getElementById('toggleFan').addEventListener('click', () => {
-            const statusDiv = document.getElementById('status');
-            statusDiv.textContent = 'Sending command...';
-
-            fetch('https://mkzense.com/webhook/alexa/cf2d79a3d274ff9dec3bac63cb279af09fcdb7f4/IFTTTrigger-3', {
-                method: 'GET',
-                mode: 'no-cors'
-            })
-            .then(() => {
-                statusDiv.textContent = 'Command sent successfully!';
-                setTimeout(() => statusDiv.textContent = '', 3000);
-            })
-            .catch(error => {
-                console.error('Error sending command:', error);
-                statusDiv.textContent = 'Error sending command.';
-                setTimeout(() => statusDiv.textContent = '', 3000);
-            });
+            sendWebhook('https://mkzense.com/webhook/alexa/cf2d79a3d274ff9dec3bac63cb279af09fcdb7f4/IFTTTrigger-3', document.getElementById('status'));
         });
 
-        document.getElementById('bedroomLightsOn').addEventListener('click', () => {
+        document.getElementById('toggleBedroomLights').addEventListener('click', () => {
             const statusDiv = document.getElementById('status');
-            statusDiv.textContent = 'Sending command...';
+            let currentState = localStorage.getItem(BEDROOM_LIGHTS_STATE_KEY) || 'off';
 
-            fetch('https://mkzense.com/webhook/alexa/cf2d79a3d274ff9dec3bac63cb279af09fcdb7f4/Bedtime', {
-                method: 'GET',
-                mode: 'no-cors'
-            })
-            .then(() => {
-                statusDiv.textContent = 'Command sent successfully!';
-                setTimeout(() => statusDiv.textContent = '', 3000);
-            })
-            .catch(error => {
-                console.error('Error sending command:', error);
-                statusDiv.textContent = 'Error sending command.';
-                setTimeout(() => statusDiv.textContent = '', 3000);
-            });
+            if (currentState === 'on') {
+                sendWebhook(BEDROOM_LIGHTS_OFF_URL, statusDiv);
+                localStorage.setItem(BEDROOM_LIGHTS_STATE_KEY, 'off');
+            } else {
+                sendWebhook(BEDROOM_LIGHTS_ON_URL, statusDiv);
+                localStorage.setItem(BEDROOM_LIGHTS_STATE_KEY, 'on');
+            }
+            updateBedroomLightsButton(); // Update button text immediately
         });
+
+        // Initialize button text on page load
+        document.addEventListener('DOMContentLoaded', updateBedroomLightsButton);
     </script>
 </body>
 </html>
