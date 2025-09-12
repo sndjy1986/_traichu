@@ -14,29 +14,54 @@
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            height: 100vh;
+            min-height: 100vh; /* Use min-height to allow content to expand */
+            padding: 20px; /* Add some padding around the content */
+            box-sizing: border-box; /* Include padding in element's total width and height */
+        }
+        .control-box {
+            background-color: #2c2c2c;
+            border: 1px solid #555;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px; /* Space between boxes */
+            text-align: center;
+            width: 300px; /* Fixed width for the boxes */
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+        }
+        .control-box h2 {
+            margin-top: 0;
+            color: #eee;
+            font-size: 1.5em;
+            margin-bottom: 15px;
         }
         .button-container {
             display: flex;
-            gap: 20px;
+            flex-wrap: wrap; /* Allow buttons to wrap to next line */
+            justify-content: center;
+            gap: 10px; /* Space between buttons */
         }
         .control-button {
-            padding: 15px 30px;
-            font-size: 18px;
+            padding: 15px 25px;
+            font-size: 16px;
             cursor: pointer;
-            border: 1px solid #555;
+            border: 1px solid #666;
             border-radius: 5px;
-            background-color: #2c2c2c;
+            background-color: #3a3a3a;
             color: white;
-            transition: background-color 0.3s;
+            transition: background-color 0.3s, transform 0.1s;
+            flex-grow: 1; /* Allow buttons to grow and fill space */
+            min-width: 120px; /* Minimum width for buttons */
         }
         .control-button:hover {
             background-color: #4a4a4a;
+            transform: translateY(-2px);
         }
         .status-message {
             margin-top: 20px;
             font-size: 16px;
             height: 20px;
+            text-align: center;
+            width: 100%; /* Ensure status message takes full width */
         }
         .back-link {
             position: absolute;
@@ -50,17 +75,28 @@
 </head>
 <body>
     <a href="index.html" class="back-link">&larr; Back to Home</a>
-    <h1>Bedroom Fan</h1>
-    <div class="button-container">
-        <button id="toggleFan" class="control-button">On/Off</button>
-        <button id="toggleBedroomLights" class="control-button"></button>
+    <h1>Smart Home Control</h1> <!-- General heading for the page -->
+
+    <div class="control-box">
+        <h2>Bedroom Fan</h2>
+        <div class="button-container">
+            <button id="toggleFan" class="control-button">On/Off</button>
+        </div>
     </div>
+
+    <div class="control-box">
+        <h2>Bedroom Lights</h2>
+        <div class="button-container">
+            <button id="bedroomLightsOn" class="control-button">ON</button>
+            <button id="bedroomLightsOff" class="control-button">OFF</button>
+        </div>
+    </div>
+
     <div id="status" class="status-message"></div>
 
     <script>
         const BEDROOM_LIGHTS_ON_URL = 'https://mkzense.com/webhook/alexa/cf2d79a3d274ff9dec3bac63cb279af09fcdb7f4/Bedtime';
         const BEDROOM_LIGHTS_OFF_URL = 'https://mkzense.com/webhook/alexa/cf2d79a3d274ff9dec3bac63cb279af09fcdb7f4/Wakeup';
-        const BEDROOM_LIGHTS_STATE_KEY = 'bedroomLightsState';
 
         function sendWebhook(url, statusDiv) {
             statusDiv.textContent = 'Sending command...';
@@ -79,37 +115,17 @@
             });
         }
 
-        function updateBedroomLightsButton() {
-            const button = document.getElementById('toggleBedroomLights');
-            const currentState = localStorage.getItem(BEDROOM_LIGHTS_STATE_KEY) || 'off'; // Default to off
-
-            if (currentState === 'on') {
-                button.textContent = 'Bedroom Lights (ON)';
-            } else {
-                button.textContent = 'Bedroom Lights (OFF)';
-            }
-        }
-
         document.getElementById('toggleFan').addEventListener('click', () => {
             sendWebhook('https://mkzense.com/webhook/alexa/cf2d79a3d274ff9dec3bac63cb279af09fcdb7f4/IFTTTrigger-3', document.getElementById('status'));
         });
 
-        document.getElementById('toggleBedroomLights').addEventListener('click', () => {
-            const statusDiv = document.getElementById('status');
-            let currentState = localStorage.getItem(BEDROOM_LIGHTS_STATE_KEY) || 'off';
-
-            if (currentState === 'on') {
-                sendWebhook(BEDROOM_LIGHTS_OFF_URL, statusDiv);
-                localStorage.setItem(BEDROOM_LIGHTS_STATE_KEY, 'off');
-            } else {
-                sendWebhook(BEDROOM_LIGHTS_ON_URL, statusDiv);
-                localStorage.setItem(BEDROOM_LIGHTS_STATE_KEY, 'on');
-            }
-            updateBedroomLightsButton(); // Update button text immediately
+        document.getElementById('bedroomLightsOn').addEventListener('click', () => {
+            sendWebhook(BEDROOM_LIGHTS_ON_URL, document.getElementById('status'));
         });
 
-        // Initialize button text on page load
-        document.addEventListener('DOMContentLoaded', updateBedroomLightsButton);
+        document.getElementById('bedroomLightsOff').addEventListener('click', () => {
+            sendWebhook(BEDROOM_LIGHTS_OFF_URL, document.getElementById('status'));
+        });
     </script>
 </body>
 </html>
