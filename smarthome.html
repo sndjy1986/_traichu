@@ -104,11 +104,14 @@
 
     <div class="control-box">
         <h2>Live Camera Stream</h2>
-        <video id="video" style="width: 100%; max-width: 640px; border: 1px solid #555; background-color: #000;" controls></video>
+        <iframe 
+            src="http://107.211.33.65:8080/60645807-ac9f-45a1-9461-280bcd53e8e7.html"
+            style="width: 100%; height: 240px; border: 1px solid #555;"
+            frameborder="0" 
+            allow="autoplay; encrypted-media" 
+            allowfullscreen>
+        </iframe>
     </div>
-
-    <!-- HLS.js for streaming -->
-    <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
 
     <script>
         const BEDROOM_LIGHTS_ON_URL = 'https://mkzense.com/webhook/alexa/cf2d79a3d274ff9dec3bac63cb279af09fcdb7f4/Bedtime';
@@ -153,17 +156,6 @@
         document.getElementById('livingRoomLightsOff').addEventListener('click', () => {
             sendWebhook(LIVING_ROOM_LIGHTS_OFF_URL, document.getElementById('status'));
         });
-
-        // Video Streaming
-        var video = document.getElementById('video');
-        var videoSrc = 'http://107.211.33.65:8181/hls/live.stream.m3u8'; 
-        if (Hls.isSupported()) {
-            var hls = new Hls();
-            hls.loadSource(videoSrc);
-            hls.attachMedia(video);
-        } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
-            video.src = videoSrc;
-        }
     </script>
 </body>
 </html>
