@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Smart Home Control</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/weather-icons/2.0.10/css/weather-icons.min.css">
     <style>
         body {
             font-family: system-ui, sans-serif;
@@ -14,18 +15,26 @@
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            min-height: 100vh; /* Use min-height to allow content to expand */
-            padding: 20px; /* Add some padding around the content */
-            box-sizing: border-box; /* Include padding in element's total width and height */
+            height: 100vh;
+            padding: 20px;
+            box-sizing: border-box;
+            overflow: hidden;
+        }
+        .container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            align-items: center;
+            gap: 20px;
+            width: 100%;
         }
         .control-box {
             background-color: #2c2c2c;
             border: 1px solid #555;
             border-radius: 8px;
             padding: 20px;
-            margin-bottom: 20px; /* Space between boxes */
             text-align: center;
-            width: 300px; /* Fixed width for the boxes */
+            width: 300px;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
         }
         .control-box h2 {
@@ -36,9 +45,9 @@
         }
         .button-container {
             display: flex;
-            flex-wrap: wrap; /* Allow buttons to wrap to next line */
+            flex-wrap: wrap;
             justify-content: center;
-            gap: 10px; /* Space between buttons */
+            gap: 10px;
         }
         .control-button {
             padding: 15px 25px;
@@ -49,8 +58,8 @@
             background-color: #3a3a3a;
             color: white;
             transition: background-color 0.3s, transform 0.1s;
-            flex-grow: 1; /* Allow buttons to grow and fill space */
-            min-width: 120px; /* Minimum width for buttons */
+            flex-grow: 1;
+            min-width: 120px;
         }
         .control-button:hover {
             background-color: #4a4a4a;
@@ -61,7 +70,7 @@
             font-size: 16px;
             height: 20px;
             text-align: center;
-            width: 100%; /* Ensure status message takes full width */
+            width: 100%;
         }
         .back-link {
             position: absolute;
@@ -71,49 +80,65 @@
             text-decoration: none;
             font-size: 16px;
         }
+        #weather-box {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            width: 200px;
+        }
+        #weather-content {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        #weather-content i {
+            font-size: 50px;
+            margin-right: 15px;
+        }
     </style>
 </head>
 <body>
     <a href="index.html" class="back-link">&larr; Back to Home</a>
-    <h1>Smart Home Control</h1> <!-- General heading for the page -->
-
-    <div class="control-box">
-        <h2>Bedroom Fan</h2>
-        <div class="button-container">
-            <button id="toggleFan" class="control-button">On/Off</button>
-        </div>
+    <div id="weather-box" class="control-box">
+        <h2>Current Weather</h2>
+        <div id="weather-content"></div>
     </div>
+    <h1>Smart Home Control</h1>
 
-    <div class="control-box">
-        <h2>Bedroom Lights</h2>
-        <div class="button-container">
-            <button id="bedroomLightsOn" class="control-button">ON</button>
-            <button id="bedroomLightsOff" class="control-button">OFF</button>
+    <div class="container">
+        <div class="control-box">
+            <h2>Bedroom Fan</h2>
+            <div class="button-container">
+                <button id="toggleFan" class="control-button">On/Off</button>
+            </div>
         </div>
-    </div>
 
-    <div class="control-box">
-        <h2>Living Room Lights</h2>
-        <div class="button-container">
-            <button id="livingRoomLightsOn" class="control-button">ON</button>
-            <button id="livingRoomLightsOff" class="control-button">OFF</button>
+        <div class="control-box">
+            <h2>Bedroom Lights</h2>
+            <div class="button-container">
+                <button id="bedroomLightsOn" class="control-button">ON</button>
+                <button id="bedroomLightsOff" class="control-button">OFF</button>
+            </div>
+        </div>
+
+        <div class="control-box">
+            <h2>Living Room Lights</h2>
+            <div class="button-container">
+                <button id="livingRoomLightsOn" class="control-button">ON</button>
+                <button id="livingRoomLightsOff" class="control-button">OFF</button>
+            </div>
+        </div>
+
+        <div class="control-box">
+            <h2>Bedroom AC</h2>
+            <div class="button-container">
+                <button id="bedroomACOn" class="control-button">ON</button>
+                <button id="bedroomACOff" class="control-button">OFF</button>
+            </div>
         </div>
     </div>
 
     <div id="status" class="status-message"></div>
-
-    <div class="control-box">
-        <h2>Bedroom AC</h2>
-        <div class="button-container">
-            <button id="bedroomACOn" class="control-button">ON</button>
-            <button id="bedroomACOff" class="control-button">OFF</button>
-        </div>
-    </div>
-
-    <div class="control-box" id="weather-box">
-        <h2>Current Weather</h2>
-        <div id="weather-content"></div>
-    </div>
 
     <script>
         const BEDROOM_LIGHTS_ON_URL = 'https://mkzense.com/webhook/alexa/cf2d79a3d274ff9dec3bac63cb279af09fcdb7f4/Bedtime';
@@ -169,6 +194,112 @@
             sendWebhook(BEDROOM_AC_OFF_URL, document.getElementById('status'));
         });
 
+        function getWeatherIcon(code) {
+            const iconMapping = {
+                0: 'wi-day-sunny',
+                1: 'wi-day-cloudy',
+                2: 'wi-cloudy',
+                3: 'wi-cloudy-windy',
+                4: 'wi-smoke',
+                5: 'wi-haze',
+                6: 'wi-dust',
+                7: 'wi-dust',
+                8: 'wi-dust',
+                9: 'wi-dust',
+                10: 'wi-fog',
+                11: 'wi-fog',
+                12: 'wi-fog',
+                13: 'wi-day-lightning',
+                14: 'wi-showers',
+                15: 'wi-showers',
+                16: 'wi-showers',
+                17: 'wi-thunderstorm',
+                18: 'wi-strong-wind',
+                19: 'wi-tornado',
+                20: 'wi-sleet',
+                21: 'wi-rain',
+                22: 'wi-snow',
+                23: 'wi-rain-mix',
+                24: 'wi-sleet',
+                25: 'wi-showers',
+                26: 'wi-snow',
+                27: 'wi-hail',
+                28: 'wi-fog',
+                29: 'wi-thunderstorm',
+                30: 'wi-dust',
+                31: 'wi-dust',
+                32: 'wi-dust',
+                33: 'wi-dust',
+                34: 'wi-dust',
+                35: 'wi-dust',
+                36: 'wi-snow-wind',
+                37: 'wi-snow-wind',
+                38: 'wi-snow-wind',
+                39: 'wi-snow-wind',
+                40: 'wi-fog',
+                41: 'wi-fog',
+                42: 'wi-fog',
+                43: 'wi-fog',
+                44: 'wi-fog',
+                45: 'wi-fog',
+                46: 'wi-fog',
+                47: 'wi-fog',
+                48: 'wi-fog',
+                49: 'wi-fog',
+                50: 'wi-sleet',
+                51: 'wi-sleet',
+                52: 'wi-sleet',
+                53: 'wi-sleet',
+                54: 'wi-sleet',
+                55: 'wi-sleet',
+                56: 'wi-sleet',
+                57: 'wi-sleet',
+                58: 'wi-rain-mix',
+                59: 'wi-rain-mix',
+                60: 'wi-rain',
+                61: 'wi-rain',
+                62: 'wi-rain',
+                63: 'wi-rain',
+                64: 'wi-rain',
+                65: 'wi-rain',
+                66: 'wi-rain-mix',
+                67: 'wi-rain-mix',
+                68: 'wi-rain-mix',
+                69: 'wi-rain-mix',
+                70: 'wi-snow',
+                71: 'wi-snow',
+                72: 'wi-snow',
+                73: 'wi-snow',
+                74: 'wi-snow',
+                75: 'wi-snow',
+                76: 'wi-snow',
+                77: 'wi-snow',
+                78: 'wi-snow',
+                79: 'wi-sleet',
+                80: 'wi-showers',
+                81: 'wi-showers',
+                82: 'wi-showers',
+                83: 'wi-rain-mix',
+                84: 'wi-rain-mix',
+                85: 'wi-snow',
+                86: 'wi-snow',
+                87: 'wi-sleet',
+                88: 'wi-sleet',
+                89: 'wi-hail',
+                90: 'wi-hail',
+                91: 'wi-thunderstorm',
+                92: 'wi-thunderstorm',
+                93: 'wi-thunderstorm',
+                94: 'wi-thunderstorm',
+                95: 'wi-thunderstorm',
+                96: 'wi-thunderstorm',
+                97: 'wi-thunderstorm',
+                98: 'wi-thunderstorm',
+                99: 'wi-thunderstorm'
+            };
+            return iconMapping[code] || 'wi-na';
+        }
+
         function fetchWeather() {
             const weatherBox = document.getElementById('weather-content');
             weatherBox.innerHTML = 'Loading weather...';
@@ -177,7 +308,9 @@
                 .then(response => response.json())
                 .then(data => {
                     const temperature = data.current_weather.temperature;
-                    weatherBox.innerHTML = `Temperature: ${temperature}°F`;
+                    const weatherCode = data.current_weather.weathercode;
+                    const iconClass = getWeatherIcon(weatherCode);
+                    weatherBox.innerHTML = `<i class="wi ${iconClass}"></i> ${temperature}°F`;
                 })
                 .catch(error => {
                     console.error('Error fetching weather:', error);
